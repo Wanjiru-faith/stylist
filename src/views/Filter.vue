@@ -1,4 +1,5 @@
 <template>
+<div>
 
     <div class ="filter-page" 
     :style="{ backgroundImage: `url(${currentImage})`  }" >
@@ -14,21 +15,19 @@
         
          <div class="seeLeft">
      <a class="prev" @click.prevent="goBack">&#10094;</a>
+     <!-- <div style="color:white; display:none">
+         {{datePicked}}
+     </div> -->
      <a class="next" @click.prevent="goNext">&#10095;</a>
      </div>  
 
-     <!-- <div class="select-location" style="padding-right:1000px; ">
-    <h3>Welcome to Msusi</h3>
-    <h2>Book Your Hair Stylist with Ease</h2><br>
-    <h4>Choose who will make you stylish <br>based on your experience <br>and the experience of others</h4>
-    </div>  -->
-        
     <div class="select-location">
-        <select class="classic" v-model="location">
+        <select class="classic" v-model="filter.selectedLocation" >
         <option value="" disabled selected="selected" data-default>Location</option>
         <option class="items" v-for ="location in locations"
          :value="location.id" 
-         :key="location.id" placeholder="Locations"
+         :key="location.id" 
+         placeholder="Locations"
          >
             {{location.town}}
             </option>
@@ -40,7 +39,7 @@
 
     <div class="select-location">
         
-    <select class="classic" v-model="hairstyle">
+    <select class="classic" v-model="filter.selectedHairstyle">
         <option value="" disabled selected="selected" data-default>Hairstyle</option>
         <option v-for ="hairstyle in hairstyles" 
         :value="hairstyle" 
@@ -58,7 +57,8 @@
 
      <div class="select-locationcal">  
          <span id="calenderInput">
-             <input placeholder="Date:"  id="datepicker" v-model="date" type="date" class="far fa-calendar-alt">
+             <input placeholder="Date:"  id="datepicker" v-model="filter.datePicked" type="date" class="far fa-calendar-alt" >
+             
          </span>
     </div>
 
@@ -66,11 +66,11 @@
         <button @click.prevent="submitButton" class="viewStylistText" >Stylists Availaable </button>
     </div>
 
-    <div class="errorMessage">
+    <!-- <div class="errorMessage">
             <p style="color:red">{{errors.location}}</p>
             <p style="color:red">{{errors.date}}</p>
             <p style="color:red">{{errors.hairstyle}}</p>
-    </div>
+    </div> -->
     
     
 
@@ -84,7 +84,7 @@
     
     
     
-
+</div>
 </div>
     
 </template>
@@ -99,23 +99,20 @@ export default {
     created(){
         setInterval(this.nextImage,8000)
     },
-
+    
   data(){
-    return{ 
-        errors:
-            {
-                location:'', 
-                hairstyle:'', 
-                date:''
-            },
+    return{
            
         images:[require("../assets/bg1.jpg"), require("../assets/bg6.jpg"), require("../assets/bg3.jpg"), require("../assets/bg7.jpg") ],
         currentNumber:0,
-        date:null,
-        location:'',
-        hairstyle:'',
+        filter:{
+                    selectedLocation:'',
+                    selectedHairstyle:'',
+                    datePicked: new Date().toISOString().slice(0,10),
+        },
 
-        locations:[
+
+                    locations:[
             {id:0, town:'Kericho'},
             {id:1, town:'Nairobi'},
             {id:2,town:'Nakuru'},
@@ -128,7 +125,11 @@ export default {
             {id:1,style:'Braids'}, 
             {id:2,style:'Weaving'},
             {id:3,style:'Dreads'} 
-        ]
+        ],
+        
+
+        
+        submitted:false,
     }
     },  
         computed:{
@@ -149,6 +150,7 @@ export default {
 
 
     methods:{ 
+
         goBack(){
             console.log(this.currentImage)
             this.prevImage()
@@ -181,18 +183,28 @@ export default {
  
         },
         submitButton(){
-            if(this.location && this.hairstyle && this.date){
+            // console.log(this.datePicked)
+            // console.log(this.)
+            // console.log(this.datePicked)
+            if(this.filter.selectedLocation && this.filter.selectedHairstyle && this.filter.datePicked){
+                
 
                  this.$router.push({path: 'booking'})
+                 this.$http.post('https://matatu-booking.firebaseio.com/filter-page/posts.json',this.filter).then(function(data){
+                     console.log(this.filter)
+                     this.submitted = true;
+
+                     });
 
             }else{
+                
+                    alert('please fill all the fields')
+                }
 
+                // !this.location ? this.errors.location ='' :this.errors.location ='Please select your location'
+                // !this.hairstyle ? this.errors.hairstyle = '' :this.errors.hairstyle = 'Please select at least one hairstyle'
+                // !this.date ? this.errors.date = '' :this.errors.date = 'You have not chosen a date'
             
-                console.log(this.location,this.hairstyle,this.date)
-                this.location ? this.errors.location ='' :this.errors.location ='Please select your location';
-                this.hairstyle ? this.errors.hairstyle = '' :this.errors.hairstyle = 'Please select at least one hairstyle'
-                this.date ? this.errors.date = '' :this.errors.date = 'You have not chosen a date'
-            }
             } 
       
 
@@ -206,20 +218,13 @@ export default {
 </script>
 
 <style scoped lang="css">
-body{
-    height: 100%;
-}
+
 
 .filter-page{
-   /* background:url('../assets/bg1.jpg') no-repeat center center fixed;   */
    background: auto;
    background: no-repeat center center fixed;
-   /* background: linear-gradient(135deg, #9f05ff69 10%, #fd5e086b 100%); 
-   border-bottom-right-radius: 5000px;*/
    position:inherit;
    margin-left:500px;
-   /* border-top-left-radius: 10000px; */
-   
    margin-left:900px;
    height:100vh;
    font-family:Arial, Helvetica, sans-serif;

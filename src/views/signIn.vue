@@ -105,7 +105,7 @@ export default {
       },
       password:{
         required,
-        between: between(4-20)
+        
       },
       email:{
         email,
@@ -127,7 +127,9 @@ export default {
     submitForm(){
     if(!this.$v.form.$invalid){ 
       console.log('Form Submitted', this.form)
-      this.$router.push({path: 'filter'})
+      this.$router.push({path: '/'})
+      this.$http.post('https://matatu-booking.firebaseio.com/signin/posts.json',this.form).then(function(data){
+            });
       
     }else{
       console.log('Invalid form')

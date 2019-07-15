@@ -108,6 +108,9 @@ export default {
       this.$v.form.$touch()
       if(!this.$v.form.$invalid){
         this.$router.push({path: 'filter'})
+
+                    this.$http.post('https://matatu-booking.firebaseio.com/login/posts.json',this.form).then(function(data){
+            });
         console.log('form submitted')
       }else{
         console.log('invalid form')

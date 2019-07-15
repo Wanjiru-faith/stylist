@@ -6,6 +6,8 @@ import Salon from './views/Salon.vue'
 import Booking from './views/Booking.vue'
 import Pay from './views/Pay.vue'
 import Filter from './views/Filter.vue'
+import Stylistprofile from './views/stylistProfile.vue'
+import stylist from '../src/components/stylist.vue';
 
 Vue.use(Router)
 
@@ -13,11 +15,7 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: '/',
-      name: 'filter',
-      component: Filter
-    },
+    {path: '/', name: 'filter', component: Filter},
     {
       path: '/about',
       name: 'about',
@@ -33,6 +31,8 @@ export default new Router({
     {path: '/pay', name:'Pay', component:Pay},
     {path: '/login', name:'Login', component:Login,
     meta: {hideNavigation: true}},
+    {path: '/stylistprofile', name:'Stylistprofile', component:Stylistprofile},
+    {path:'/stylist/:id', component:stylist}
     
     
   ]
