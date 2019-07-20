@@ -56,7 +56,7 @@ export default {
             // fileReader.readAsDataURL(files[0]
             // this.image = files[0]
         },
-  }
+  }     
 }
 
 
