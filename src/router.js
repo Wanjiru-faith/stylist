@@ -7,7 +7,7 @@ import Booking from './views/Booking.vue'
 import Pay from './views/Pay.vue'
 import Filter from './views/Filter.vue'
 import Stylistprofile from './views/stylistProfile.vue'
-import stylist from '../src/components/stylist.vue';
+import stylist from './views/stylist.vue';
 
 Vue.use(Router)
 

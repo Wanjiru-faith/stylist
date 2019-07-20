@@ -4,15 +4,7 @@
         <h2> My profile </h2>
 
         <form v-if="!submitted">
-            <label>Profile Picture:</label>
-            <input type="file" name="myImage" accept="image/*" 
-            style="display:none"
-            ref="fileInput"
-            @change="onFileSelected"/>
 
-            <img :src="profile.selectedImage" width="220" >
-
-            <button @click.prevent = "onUpload"> Upload </button>
 
             <label>Name:</label>
             <!--lazy is an input modify-->
@@ -64,8 +56,8 @@
             <h4>Name: {{profile.stylistName}}</h4>
         <h4><rating/></h4>
         <h4>Workplace: {{profile.workplace}}</h4>
-        <h4>Description:</h4>
-        <h4>{{profile.decription}}</h4>
+        <h4>Description: {{profile.description}}</h4>
+       
 
         <h4>My Services:</h4>
         <ul>
@@ -84,21 +76,26 @@
 <script>
 import axios from 'axios'
 import Rating from "../components/rating.vue"
+import imageUpload from "../views/imageUpload.vue"
+import { mapActions } from 'vuex';
+// import upload from '../assets';
 export default {
+    name:'stylistProfile',
     components:{
-        Rating
+        Rating,
+        imageUpload
 
     },
 
     data(){
         return{
             profile:{
-            selectedImage:null,
+            
             stylistName:" ",
             workplace:" ",
             description:" ",
             services:[],
-            image:null
+            
             
             },
             submitted:false,
@@ -106,38 +103,32 @@ export default {
     },
     //fake jason server to store user inputs
     methods:{
-        
-        
-        onUpload() {
-            this.$refs.fileInput.click()
-        },
-        onFileSelected(event) {
-            const files = event.target.files;
-            let filename = files[0].name
-            if(filename.lastIndexOf('.') <= 0 ){
-                return alert('Please add avalid file!')
-            }
-            const fileReader = new FileReader()
-            fileReader.addEventListener('load', () => {
-                this.profile.selectedImage = fileReader.result
-
-            })
-            fileReader.readAsDataURL(files[0])
-            this.image = files[0]
-        },
+    //     ...mapActions(['addStylistProfile']),
+    //    postProfile(e){
+    //         e.preventDefault();
+    //         //call addTodo function
+    //         this.addStylistProfile(profile)
+    //     }
+   
+            
         
         postProfile (){
             
-            this.$http.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json',this.profile).then(function(data){
-                console.log(data);
+            // this.$http.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json',this.profile).then(function(data){
+            //     console.log(data);
 
-                this.submitted = true;
-            });
+            //     this.submitted = true;
+            // });
+            let profile = this.profile
+            // console.log(profile)
+            this.$store.dispatch('addStylistProfile',{ profile })
+            // this.addStylistProfile(this.profile)
         },
     }
+     
     
 }
-
+ 
 
 </script>
 <style scoped>
@@ -161,11 +152,6 @@ export default {
      
 
 } */
-label{
-    display:block;
-    margin:20px 0 10px;
-}
-
 input[type="text"], textarea{
     display:block;
     width:50%;
@@ -174,7 +160,13 @@ input[type="text"], textarea{
     border-radius: 4px;
     background-color: transparent;
     
+} 
+label{
+    display:block;
+    margin:20px 0 10px;
 }
+
+
 #previewBlog{
     border:1px saddlebrown #ccc;
     border: 1px solid;

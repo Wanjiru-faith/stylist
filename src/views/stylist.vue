@@ -3,7 +3,7 @@
         
         <div class="grid-container" >
             <div class="menu">
-                <!-- <div class ="stylists">
+                <div class ="stylists">
                 <div class=Image>
                 <img :src="profile.selectedImage" >
                 </div>
@@ -14,7 +14,7 @@
                 <p style="float:left;"> Workplace: {{profile.workplace}}</p> <br>
                 <p style="float:left;"> Description: {{profile.decription}} </p>
                 </div>
-                </div> -->
+                </div>
 
             </div>
         
@@ -32,6 +32,54 @@
             <div class="filterInformation">
 
             </div>
+            <div class="time-table">
+
+            <table>
+                <tr>
+                    <th>TIME:</th>
+                    <th>10PM - MIDNIGHT</th>
+                    <th>MIDNIGHT - 2AM.</th>
+                    <th>2AM. - 4AM.</th>
+                    <th>4AM. - 6AM.</th>
+                    <th>6AM. - 8AM.</th>
+                    <th>8AM. - NOON</th>
+                    <th>NOON - 2PM.</th>
+                    <th>2PM. - 4PM.</th>
+                    <th>4PM. - 6PM.</th>
+                    <th>6PM. - 8PM.</th>
+                    <th>8PM. - 10PM.</th>
+
+                </tr>
+                <tr>
+                    <td>First Hour</td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td>Second Hour</td>
+                    <td></td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                </table>
+                </div>
 
         </div> 
         </div>
@@ -55,27 +103,30 @@ export default {
 
     }
     
-  },
-    //   created(){
-    //     console.log(this.$route.params)
-    //     let url = `https://matatu-booking.firebaseio.com/stylist-profile/posts/${this.id}.json`
-    //     this.$http.get(url).then(function(data){
-    //         return data.json();  
-    //     }).then(function(data){
-    //         this.profile = data;
-    //         console.log(data);
-    //     });
-    // },
-          created(){
-        console.log(this.$route.params)
-        let url = `https://matatu-booking.firebaseio.com/filter-page/posts/${this.id}.json`
-        this.$http.get(url).then(function(data){
-            return data.json();  
-        }).then(function(data){
-            this.filter = data;
+  }, 
+      created(){
+
+    },
+
+    methods: {
+        fetchProfile1() {
+            let url = `https://matatu-booking.firebaseio.com/stylists-profiles/posts/${this.id}.json`
+            return this.$http.get(url).then(function(data){
+                return data.json();  
+            })
+        },
+        fetchProfile2(){
+            // read filter from store
+             let url = `https://matatu-booking.firebaseio.com/stylists-profiles/posts/${this.id}.json`
+             return this.$http.get(url).then(function(data){
+            return data.json();
             console.log(data);
-        });
-    }    
+
+            })
+
+        }
+
+    }  
 
 
 }
@@ -164,6 +215,16 @@ export default {
     margin-left:0;
     text-align: left;
     position:top;
+}
+.time-table{
+    width:700px;
+    background-color:yellow;
+    font-size:12px;
+    margin-top:200px;
+    margin-left:100px;
+}
+table, th, td {
+  border: 1px solid black;
 }
 
 

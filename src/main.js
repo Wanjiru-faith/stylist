@@ -15,7 +15,8 @@ import { MdDatepicker, MdButton, MdContent, MdTabs } from 'vue-material/dist/com
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import VueResource from 'vue-resource'
-import VeeValidate from 'vee-validate';
+import VeeValidate from 'vee-validate'
+import axios from 'axios'
 
 
 //import VueRouter from 'vue-router' 
@@ -32,6 +33,7 @@ Vue.use(Vuelidate)
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 Vue.use(VueResource)
+Vue.use(axios)
 
 new Vue({
   router,

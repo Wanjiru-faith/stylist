@@ -190,8 +190,10 @@ export default {
                 
 
                  this.$router.push({path: 'booking'})
-                 this.$http.post('https://matatu-booking.firebaseio.com/filter-page/posts.json',this.filter).then(function(data){
+                 this.$http.post('https://matatu-booking.firebaseio.com/filter-page/posts.json',this.filter)
+                .then(function(data){
                      console.log(this.filter)
+                     // save filter id in store
                      this.submitted = true;
 
                      });
