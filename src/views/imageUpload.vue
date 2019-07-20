@@ -53,7 +53,7 @@ export default {
             //     this.profile.selectedImage = fileReader.result
 
             // })
-            // fileReader.readAsDataURL(files[0])
+            // fileReader.readAsDataURL(files[0]
             // this.image = files[0]
         },
   }
