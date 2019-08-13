@@ -17,11 +17,9 @@ import 'vue-material/dist/theme/default.css'
 import VueResource from 'vue-resource'
 import VeeValidate from 'vee-validate'
 import axios from 'axios'
+import VueRouter from 'vue-router' 
 
-
-//import VueRouter from 'vue-router' 
-
-
+Vue.use(VueRouter)
 Vue.use(VeeValidate);
 Vue.use(MdButton)
 Vue.use(MdContent)
@@ -33,7 +31,26 @@ Vue.use(Vuelidate)
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 Vue.use(VueResource)
-Vue.use(axios)
+// Vue.use(axios)
+// import Vue from 'vue'
+// import Buefy from 'buefy'
+// import 'buefy/dist/buefy.css'
+
+// Vue.use(Buefy)
+
+
+//we have modified the vue engine and added axios. 
+//We can now use axios in all our components like this.$axios.
+Vue.prototype.$axios = axios;
+
+
+//or We can now use axios in all our components like this.$http.
+//Vue.prototype.$http = Axios;
+
+// const token = localStorage.getItem('token')
+// if (token) {
+//   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+// }
 
 new Vue({
   router,

@@ -16,7 +16,7 @@
           <v-card-text style="padding-top:50px;">
             <v-form>
               
-              <v-text-field :model="form.email"
+              <v-text-field v-model="form.email"
               @blur="$v.form.email.$touch()"
               dark
               single-line
@@ -27,7 +27,8 @@
               >
               
               </v-text-field>
-               <p class ="errorMessage" v-if="$v.form.email.$error">The email is not valid</p>
+               <p class ="errorMessage" v-if="!$v.form.email.required && $v.form.email.$error && !$v.form.email.email
+               ">The email is not valid</p>
                <p>Error:{{$v.form.email.$error}}</p>
               
               
@@ -44,7 +45,7 @@
               @click:append="show = !show"
               class="inputs"
               ></v-text-field>
-              <p class ="errorMessage" v-if="$v.form.password.$error">Your password does not match the email</p>
+              <p class ="errorMessage" v-if="$v.form.password.$error  && !$v.form.password.required">Your password does not match the email</p>
               <p>Error:{{$v.form.password.$error}}</p>
 
               <div class="form-group">
@@ -57,9 +58,6 @@
               <div class="form-group" style="padding-bottom:5px;">
               <v-btn @click="submitForm" id="submit-button">LOGIN</v-btn>
               </div>
-              
-          
-        
             </v-form>
           </v-card-text>
         </v-card>
@@ -70,62 +68,78 @@
 </template>
 
 <script>
-import { required, integer, between,email } from 'vuelidate/lib/validators'
-
-
-
+import { required, integer, between,email,password } from 'vuelidate/lib/validators'
+import { mapActions } from 'vuex';
 
 export default {
   data(){
     return{
       form:{
-        email:null,
-        password:null,
-        rememberMe:null,
-        
+        email:"",
+        password:"",
+        // rememberMe:'', 
       },
       show:false,
       password: "Password",
+      
       canGoNext:false
     }
   },
   validations:{
     form:{
       email:{
-        email,
+        email,  
         // required
       },
       password:{
-        required,
-        
-      }
+        required,  
+        // password
+        }
       
       }      
     },    
 
   methods:{
+    // ...mapActions(['logInForm']),
     submitForm(){
       this.$v.form.$touch()
-      if(!this.$v.form.$invalid){
-        this.$router.push({path: 'filter'})
+      if(!this.$v.form.$invalid && !this.$v.form.$error){
+        this.$http.post('http://localhost:3000/login',{
+        email: this.form.email,
+        password: this.form.password
+        })
+        // this.logInForm(this.form)
+          .then(response => {
+    //use the response from the server 
+     let is_stylist = response.data.user.is_stylist
+              localStorage.setItem('user',JSON.stringify(response.data.user))
+              localStorage.setItem('jwt',response.data.token)
 
-                    this.$http.post('https://matatu-booking.firebaseio.com/login/posts.json',this.form).then(function(data){
-            });
-        console.log('form submitted')
+              if (localStorage.getItem('jwt') != null){
+                  // this.$emit('loggedIn')
+                  if(this.$route.params.nextUrl != null){
+                      this.$router.push(this.$route.params.nextUrl)
+                  }
+                  else {
+                      if(is_stylist== 1){
+                          let userId = response.body.user.id;
+                          this.$router.push(`stylistprofile/${userId}`)
+                          // console.log(`stylistprofile/${userId}`)
+                      }
+                      else {
+                          this.$router.push({path:'/'})
+                      }
+                  }
+              }
+  })
+  console.log('Form Submitted', this.form)
+        
       }else{
         console.log('invalid form')
       }
     }
-    
-    },
-    goNext:function (){
-      // postFormToDB(this.form)
-      this.$http.post('',this.form).then(function(data){
-      })
     }
-    
-  
-}
+  }
 //<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 </script>
 

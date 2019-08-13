@@ -43,8 +43,7 @@ $invalid  && $v.form.name.$invalid"
   @blur="$v.form.email.$touch()" 
   :class ="{error: shouldAppendErrorClass($v.form.email), valid: shouldAppendValidClass($v.form.email)}"
   id="name">
-  <p v-if="!$v.form.email.invalid && $v.form.email.$error" class="error-message">Invalid email adress</p>
-  
+  <p v-if="$v.form.email.$invalid && $v.form.email.$error" class="error-message">Invalid email adress</p>
   
 </div>
 
@@ -57,8 +56,22 @@ $invalid  && $v.form.name.$invalid"
   <p v-if="!$v.form.password.required && $v.form.password.$error" class="error-message">Please fill in your password</p>
   <p v-if="!$v.form.password.between && $v.form.password.$error" class="error-message">Password should be between 4 and 20</p>
   
-  
 </div>
+<div class="form-group">
+  <label for="password-confirm" type="password">Please confirm your password!
+  </label>
+  <input id="password-confirm" v-model="form.passwordConfirmation" required>
+</div>
+
+<div class="classic">
+  <label for="password-confirm">Are you open as a hair-stylist?</label>
+  <select v-model="form.is_stylist" >
+    <option value=1 >Yes</option>
+    <option value=0>No</option>
+  </select>
+  </div>
+
+
 
 <!-- <div class="form-group">
   <input v-model="form.newsletter"
@@ -69,7 +82,7 @@ $invalid  && $v.form.name.$invalid"
 </div> -->
 
 <div class="submitButton">
-<button id="submit-button" :disabled="$v.form.$invalid" @click="submitForm">SUBMIT</button>
+<button type="submit" id="submit-button" :disabled="$v.form.$invalid" >SUBMIT</button>
 </div>
 
 
@@ -82,17 +95,24 @@ $invalid  && $v.form.name.$invalid"
 
 <script>
 import { required, integer, between,email } from 'vuelidate/lib/validators'
+// import { mapActions } from 'vuex';
 
 export default {
+  name:"signInForm",
+  props : ["nextUrl"],
   data(){
     return{
       form:{
-        firstName:null,
-        secondName:null,
-        password:null,
-        email:null,
-        newsletter:null
-      }
+        firstName:"",
+        secondName:"",
+        password:"",
+        email:"",
+        is_stylist : 0,
+        passwordConfirmation : "",
+      },
+      
+            
+       
     }
   },
   validations:{
@@ -108,7 +128,7 @@ export default {
         
       },
       email:{
-        email,
+        // email,
         required
         // required: /*validators requiredIf*/(function(){
         //   // return !!this.form.newsletter
@@ -118,25 +138,59 @@ export default {
     },    
 
   methods:{
-    shouldAppendValidClass(field){
-      return !field.$invalid && field.$model && field.$dirty
-    },
-    shouldAppendErrorClass(field){
-      return field.$error
-    },
-    submitForm(){
-    if(!this.$v.form.$invalid){ 
-      console.log('Form Submitted', this.form)
-      this.$router.push({path: '/'})
-      this.$http.post('https://matatu-booking.firebaseio.com/signin/posts.json',this.form).then(function(data){
-            });
-      
-    }else{
-      console.log('Invalid form')
-     } 
-    } 
+      shouldAppendValidClass(field){
+        return !field.$invalid && field.$model && field.$dirty
+        
+      },
+      shouldAppendErrorClass(field){
+        return field.$error
+      },
+      submitForm(){
+
+      if(!this.$v.form.$invalid && this.form.password === this.form.passwordConfirmation) { 
+        console.log('Form Submitted', this.form)
+        // this.$router.push({path: '/'})
+        this.$http.post('http://localhost:3000/sign-in',{
+          firstName:this.form.firstName,
+          secondName: this.form.secondName,
+          email: this.form.email,  
+          password: this.form.password,
+          is_stylist: this.form.is_stylist
+        })
+        .then(response => {
+                          localStorage.setItem('user',JSON.stringify(response.data.user))
+                          localStorage.setItem('jwt',response.data.token)
+        
+                          if (localStorage.getItem('jwt') != null){//if user has an account already
+                              // this.$emit('loggedIn')
+                              if(this.$route.params.nextUrl != null){//I need explanation!!!
+                                  this.$router.push(this.$route.params.nextUrl)
+                              }
+                              else{
+                                  this.$router.push('/')
+                              }
+                          }
+                          
+              })
+        .catch(error => {
+          console.error(error);
+        });
+
+      } else {
+        this.form.password = ""
+        this.form.passwordConfirm = ""
+
+        return alert("Passwords do not match")
+      }
+    }
   }
 }
+
+
+
+    
+     
+
 //<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 </script>
 
@@ -146,8 +200,9 @@ export default {
 .flex-container {
   display: flex;
   justify-content:center;
-  align-items: center;
- padding:100px; 
+ align-items: center;
+ padding:100px;
+ 
   
 }
 #form{
@@ -200,14 +255,15 @@ h2{
 }
 .form-group{
   padding:10px;
+
   
 }
-input{
+.form-group input{
   
   border-radius: 30px;
   width: 100%;
   padding: 12px 20px;
-  margin: 8px 0;
+  margin: 7px 0;
   display: inline-block;
   border: 1px solid #ccc;
   color:black;
@@ -217,6 +273,41 @@ input{
 }
 .error-message{
   color:red;
+}
+
+::placeholder {
+  color: black;
+  opacity: 1; /* Firefox */
+  font-size: 30px;
+  
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+ color: black;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+ color: black;
+}
+select::-ms-expand {
+     display: block;
+     -webkit-appearance: menu; }
+
+select {
+    -webkit-appearance: menulist !important; 
+    color:red;
+    font-weight:;
+    margin: 7px 0;
+    outline:none;
+}
+.classic{
+    padding: 12px 20px;
+    margin: 7px 0;
+    width: 100%;
+    /* border:solid white;
+    font-size: 23px;
+    font-weight: 500;
+  	position: absolute; */
 }
 
 </style>

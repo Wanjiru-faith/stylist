@@ -4,21 +4,28 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@myena/advanced-select": "^0.6.2",
     "axios": "^0.19.0",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
     "bootstrap": "^3.4.1",
     "bootstrap-vue": "^2.0.0-rc.24",
+    "circular-json": "^0.5.9",
     "core-js": "^2.6.5",
     "jquery": "^3.4.1",
+    "jsonwebtoken": "^8.5.1",
     "popper.js": "^1.15.0",
     "register-service-worker": "^1.6.2",
+    "sqlite3": "^4.0.9",
     "vee-validate": "^2.2.12",
     "vue": "^2.6.10",
+    "vue-axios": "^2.1.4",
     "vue-material": "^1.0.0-beta-11",
     "vue-multiselect": "^2.1.6",
     "vue-resource": "^1.5.1",
@@ -27,7 +34,7 @@
     "vuejs-datepicker": "^1.6.2",
     "vuelidate": "^0.7.4",
     "vuetify": "^1.5.16",
-    "vuex": "^3.0.1"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",

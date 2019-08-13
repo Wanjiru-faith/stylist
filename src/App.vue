@@ -14,6 +14,7 @@
 import footer from './components/footer.vue'
 import header from './components/header.vue'
 import Booking from '@/views/Booking.vue'
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 export default {
   components:{

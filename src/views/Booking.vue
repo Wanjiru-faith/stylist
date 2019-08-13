@@ -3,21 +3,25 @@
   <div>
     <div class="grid-container">
         
-        <div class="menu">services</div>
+        <div class="menu">services
+        </div>
         <div class="main">
             <div class="stylists">
-                <div v-for="profile in  profiles" class="single-profile" :profile="profile" :key="profile.id">
+                <div v-for="profile in  profiles" class="single-profile" :profile="profiles" :key="profile.id">
                   <router-link v-bind:to="'/stylist/' + profile.id">
 
                           <div class="stylistContainer" >
-                              <div class="profileImage"> 
-                                  <img :src="profile.selectedImage" class= "avatar" >
+                              <div class="profileImage">
+                                  <img :src="profile.imagePreview" class= "avatar" >
                               </div>
                               <div class= "stylistInformation">
                               <p style="float:left;">Name:{{profile.stylistName}}</p>
                               <p style="float:left;"><rating/></p>
                               <p style="float:left;">Workplace: {{profile.workplace}}</p> <br>
                               <p style="float:left;">Description: {{profile.description | snippet}} </p>
+                              <!-- {{profile}} -->
+                              <!-- {{$store.state.profiles}}  -->
+                              
                               </div>
                             </div>
 
@@ -35,20 +39,21 @@ import Stylist from "../views/stylist.vue"
 import Rating from "../components/rating.vue"
 import { mapGetters, mapActions } from 'vuex';
 import { mapState } from 'vuex'
+import store from "../store"
 
 export default {
-      name:"Booking",
+      // name:"stylists",
     // implement the mapGetters
-    computed:{
-        stylists(){
-        return this.$store.getters.allStylists;
-        }
+    // computed:{
+    //     stylists(){
+    //     return this.$store.getters.allprofiles;
+      
+    //     }
         // ...mapGetters(['allTodos'])
-    }, 
+    // }, 
   components:{
     Stylist,
-    Rating
-    
+    Rating 
   },
   
 
@@ -62,17 +67,40 @@ export default {
              return value.toUpperCase(); 
          },
          snippet(value){
-         return value.slice(0,10) + '...more';
+         return value.slice(0,40) + '...more';
          }
      },
+           methods:{
+        // *...mapActions(['fetchStylist'])
+
+        // this.fetchStylist(profile)
+      },
       created(){
-        this.$store.dispatch('fetchStylist');
-        // this.fetchStylist();
-    },
-    //     methods:{
-    //     ...mapActions(['fetchStylist']),
-        
-    // },
+        //this.$store.dispatch('fetchStylist')  
+        // *this.fetchStylist();
+        // debugger
+        // console.log(this.$store.getters.allprofiles);
+        // console.log(this.$store.state.profiles)  
+        this.$http.get('https://matatu-booking.firebaseio.com/stylist-profile/posts.json').then(function(data){
+          return data.json();
+        }).then(function(data){
+          var profilesArray = [];
+          for (let key in data){
+            data[key].id = key
+            profilesArray.push(data[key]);
+          }
+          this.profiles = profilesArray
+          console.log(profilesArray)
+          console.log(this.profiles)
+          console.log(this.profiles[0].stylistName)
+          console.log(this.profiles[30].imagePreview)
+
+        })
+
+      },
+
+
+
 }
 
 

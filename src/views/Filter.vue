@@ -10,7 +10,6 @@
     <h4 style="font-size:20px; padding-left:30px">Choose who will make you stylish <br>based on your experience <br>and the experience of others</h4>
     </div> -->
     
-   
     <div class="flex-container" id="filter">
         
          <div class="seeLeft">
@@ -29,8 +28,8 @@
          :key="location.id" 
          placeholder="Locations"
          >
-            {{location.town}}
-            </option>
+            {{location.town}}     
+            </option> 
             
         </select>
         
@@ -93,7 +92,7 @@
 import { setTimeout, setInterval } from 'timers';
 // import { required } from 'vuelidate/lib/validators'
 
-// import images from '../assets'
+import images from '../assets'
 
 export default {
     created(){
@@ -190,13 +189,13 @@ export default {
                 
 
                  this.$router.push({path: 'booking'})
-                 this.$http.post('https://matatu-booking.firebaseio.com/filter-page/posts.json',this.filter)
-                .then(function(data){
-                     console.log(this.filter)
-                     // save filter id in store
-                     this.submitted = true;
+                //  this.$http.post('',this.filter)
+                // .then(function(data){
+                //      console.log(this.filter)
+                //      // save filter id in store
+                //      this.submitted = true; 
 
-                     });
+                //      });
 
             }else{
                 

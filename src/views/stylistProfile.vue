@@ -2,10 +2,22 @@
     <div id="stylist-profile">
         <div class="flex-container">
         <h2> My profile </h2>
-
-        <form v-if="!submitted">
-
-
+        <keep-alive>
+            <form v-if="!profile.submitted" enctype="multipart/form-data">
+           <label>Upload Image {{profile.file}} </label>
+            <div class="imageUpload">
+                <div class="image-preview" >
+                    <img :src="profile.imagePreview" v-show="profile.showPreview" height="220" width="220">
+                 </div>
+                <input type="file" name="image" @change="onFileSelected" accept="image/*" 
+                id="file"
+                 ref="file" >
+                  <!-- ref - creates a key that we can reference the js component and allow us whats been update -->
+                <!-- <p>
+                Drag your file(s) here to begin<br> or click to browse
+                </p> -->
+                <button @click="onUpload" >Upload</button>
+            </div>
             <label>Name:</label>
             <!--lazy is an input modify-->
             <input type ="text"  v-model.lazy="profile.stylistName" required/>
@@ -18,17 +30,20 @@
             <textarea v-model.lazy="profile.description"></textarea>
  
             <div id="checkboxes">
-                <p>My services:</p>
-            <input type="checkbox" value="Braiding" v-model="profile.services"/>
-            <label>Braiding</label>
-            <input type="checkbox" value="Dreads" v-model="profile.services"/>
-            <label>Dreads</label>
-            <input type="checkbox" value="Pedicure and Manicure" v-model="profile.services"/>
-            <label>Pedicure and Manicure</label>
-            <input type="checkbox" value="Cornrows" v-model="profile.services"/>
-            <label>Cornrows</label> 
-            <input type="checkbox" value="Weaving" v-model="profile.services"/>
-            <label>Weaving</label>
+                <div class="myServices">
+                    <h2>My services:</h2>
+                </div>
+                
+                <input type="checkbox" value="Braiding" v-model="profile.services"/>
+                <label>Braiding</label><br>
+                <input type="checkbox" value="Dreads" v-model="profile.services"/>
+                <label>Dreads</label><br>
+                <input type="checkbox" value="Pedicure and Manicure" v-model="profile.services"/>
+                <label>Pedicure and Manicure</label><br>
+                <input type="checkbox" value="Cornrows" v-model="profile.services"/>
+                <label>Cornrows</label> <br>
+                <input type="checkbox" value="Weaving" v-model="profile.services"/>
+                <label>Weaving</label>
             </div>
 
             <!-- <label>Services</label>
@@ -41,89 +56,311 @@
            </div>
         </form>
 
-        <div id="thanksMessage" v-if="submitted"> 
-        <h3>Thanks for adding your post!!</h3>
-        </div>
-  
-        <div id="previewBlog">
-             
-                 <h3>Your profile preview</h3>
+        </keep-alive>
 
+        <div id="previewBlog" v-if="profile.submitted">
+
+            <div id="thanksMessage" v-if="profile.submitted"> 
+                <h3>Thanks for adding your post!!</h3>
+            </div>
+                <h3>Your profile preview</h3>
             <div class="profileImage"> 
-                <img :src="profile.selectedImage" height="220" width="220">
+                <h4>Image</h4><br>
+                <img :src="profile.imagePreview" height="220" width="220">
             </div>
             <div class= "stylistInformation">
-            <h4>Name: {{profile.stylistName}}</h4>
-        <h4><rating/></h4>
-        <h4>Workplace: {{profile.workplace}}</h4>
-        <h4>Description: {{profile.description}}</h4>
-       
-
-        <h4>My Services:</h4>
-        <ul>
-        <li v-for="service in profile.services"> {{service}} </li>
-        </ul>
+                <h4>Name: {{profile.stylistName}}</h4>
+                <h4><rating/></h4>
+                <h4>Workplace: {{profile.workplace}}</h4>
+                <h4>Description: {{profile.description}}</h4>
+            
+                <h4>My Services:</h4>
+                <ul>   
+                <li v-for="service in profile.services"> {{service}} </li>
+                </ul>
+                <div id="editDelete" v-if="profile.submitted" > 
+                    <button>EDIT</button>
+                    <button>DELETE</button>
+                </div>
            
         </div>
 
         </div>
 
     </div>
+    <div class="timeCalender">
+     <div class="datePicker"> 
+         <h2>Choose the date to set your Timetable</h2>
+         <strong><i class='far fa-calendar-alt' aria-hidden="true"></i></strong> 
+         <span id="calenderInput">
+             <input placeholder="Date:"  id="datepicker" v-model="datePicked" type="date" class="far fa-calendar-alt" >
+         </span>
+    </div>
+                <div class="time-table">
+                    <h2>The Timetable</h2>
+                <div class="time-grids">
+                    <div>Time</div>
+                    <div>6AM.-8AM.</div>
+                    <div>8AM. -10AM.</div>  
+                    <div>10AM. - NOON</div>
+                    <div>N00N - 2PM.</div>
+                    <div>2PM. - 4PM.</div>  
+                    <div>4PM. - 6PM.</div>
+                    <div>6PM. - 8PM.</div>
+                    <div>8PM - 10PM.</div>  
+                    <div>10PM.- MIDNIGHT</div>
+                    <div>MIDNIGHT - 2AM.</div>
+                    <div>2AM. - 4AM.</div>
+                    <div>4AM. - 6AM.</div>
+                </div>
+                
+                <div class="first-hour">
+
+                
+                    <div>First Hour</div>
+                    <div ref="firstHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor(index)" v-for="(text,index) in firstHourTexts" :key="index">
+                        {{ text }}
+                    </div>
+                </div>
+                
+                <div class="second-hour">
+                <div>Second hour</div>
+                    <div ref="secondHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor1(index)" v-for="(text,index) in secondHourTexts" :key="index" selected>
+                        {{ text }}
+                    </div>
+                </div>
+
+        </div>
+        </div> 
     </div>
 
 </template>
     
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import Rating from "../components/rating.vue"
-import imageUpload from "../views/imageUpload.vue"
+// import imageUpload from "../views/imageUpload.vue"
 import { mapActions } from 'vuex';
 // import upload from '../assets';
+import files from '../assets'
+import imagePreview from '../assets'
 export default {
     name:'stylistProfile',
+    name: '',
     components:{
         Rating,
-        imageUpload
+        // imageUpload
 
     },
 
     data(){
         return{
             profile:{
-            
-            stylistName:" ",
-            workplace:" ",
-            description:" ",
-            services:[],
-            
-            
+                file:'',
+                stylistName:" ",
+                workplace:" ",
+                description:" ",
+                services:[],
+                showPreview: false,
+                imagePreview: '../assets',
+                submitted:false,
             },
-            submitted:false,
+            datePicked: new Date().toISOString().slice(0,10),
+            firstHourTexts:[
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open', 
+            ],
+            secondHourTexts:[
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open',
+                'open', 
+            ]
         }
     },
+   
     //fake jason server to store user inputs
     methods:{
-    //     ...mapActions(['addStylistProfile']),
-    //    postProfile(e){
-    //         e.preventDefault();
-    //         //call addTodo function
-    //         this.addStylistProfile(profile)
-    //     }
-   
-            
+        ...mapActions(['addStylistProfile']),
+        ...mapActions(['fetchStylistProfile']),
+       postProfile(e){
+            e.preventDefault();
+            //call addTodo function
+            // this.addStylistProfile(profile)
+    //   this.$v.form.$touch()
+    //   if(!this.$v.form.$invalid && !this.$v.form.$error)
+        console.log(this.profile.file)
+        this.$http.post('http://localhost:3000/stylistprofile/' + this.$route.params.id ,{
+            image: this.profile.imagePreview,
+            name: this.profile.name,
+            workplace: this.profile.workplace,
+            description: this.profile.description,
+            services: this.profile.services.join(','),
+            submitted: this.profile.submitted
+        })
+        // if(this.profile.submitted = true){
+        //     let userId = response.body.stylis_name.id;
+        //     this.$router.push(`stylistprofilepreview/${userId}`)
+        // }
         
-        postProfile (){
-            
-            // this.$http.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json',this.profile).then(function(data){
-            //     console.log(data);
 
-            //     this.submitted = true;
-            // });
-            let profile = this.profile
-            // console.log(profile)
-            this.$store.dispatch('addStylistProfile',{ profile })
-            // this.addStylistProfile(this.profile)
+      
         },
+                changeColor(index){
+            let vm = this;
+            if(this.$refs.firstHourTexts[index].classList.contains('selected')) {
+                this.$refs.firstHourTexts[index].classList.remove('selected');
+                // Vue.set(this.texts, index, 'open');
+                vm.firstHourTexts.splice(index, 1, 'open');
+                // this.texts[index] = 'open';
+            } else {
+                this.$refs.firstHourTexts[index].classList.add('selected')
+                // Vue.set(this.texts, index, 'booked');
+                vm.firstHourTexts.splice(index, 1, 'booked');
+                // this.texts[index] = 'booked';
+            }
+            // console.log(this.is_selected)
+            // this.is_selected = !this.is_selected;
+            // if(this.is_selected){
+            //     this.text = 'booked';
+            // }else{
+            //     this.text = 'open';
+            // }
+
+        },
+              changeColor1(index){
+            let vm = this;
+            if(this.$refs.secondHourTexts[index].classList.contains('selected')) {
+                this.$refs.secondHourTexts[index].classList.remove('selected');
+                // Vue.set(this.texts, index, 'open');
+                vm.secondHourTexts.splice(index, 1, 'open');
+                // this.texts[index] = 'open';
+            } else {
+                this.$refs.secondHourTexts[index].classList.add('selected')
+                // Vue.set(this.texts, index, 'booked');
+                vm.secondHourTexts.splice(index, 1, 'booked');
+                // this.texts[index] = 'booked';
+            }
+            
+
+        },
+        onFileSelected(e){
+            let fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0])
+            fileReader.onload = e => {
+                 this.profile.imagePreview = e.target.result
+                 this.profile.showPreview = true;
+            }
+
+
+            // const file = this.$refs.file.files[0];
+            // this.profile.imagePreview = URL.createObjectURL(file);
+            // console.log(this.profile.imagePreview)
+            // //Set the local file variable to what the user has selected.
+            // this.file = this.$refs.file.files[0];
+            // //Initialize a File Reader object
+            // let reader  = new FileReader();
+            // /*
+            // Add an event listener to the reader that when the file
+            // has been loaded, we flag the show preview as true and set the
+            // image to be what was read from the reader.
+            // */
+            // reader.addEventListener("load", function () {
+            // this.profile.showPreview = true;
+            // this.profile.imagePreview = reader.result;
+            // }.bind(this), false);
+
+            // //Check to see if the file is not empty.
+            // if( this.file ){
+            // // Ensure the file is an image file.
+            //     if ( /\.(jpe?g|png|gif)$/i.test( this.file.name ) ) {
+            //         /*
+            //         Fire the readAsDataURL method which will read the file in and
+            //         upon completion fire a 'load' event which we will listen to and
+            //         display the image in the preview.
+            //         */
+            //         reader.readAsDataURL( this.file );
+            //     }
+            // }
+        },
+        onUpload(e){
+            e.preventDefault();
+
+            console.log(this.profile.imagePreview)
+            let data = new FormData();
+            data.append('file', this.profile.imagePreview, this.profile.imagePreview.data)
+            var token = sessionStorage.getItem('token')
+            const config= {
+                hearders: {
+                    'Content-Type' : 'multipart/form-data'
+
+                }
+            }
+            // this.$http.post( 'http://localhost:3000/assets?token=' + token, data, config)
+            // Initialize the form data
+            // let formData = new FormData()
+            // //Add the form data we need to submit
+            // formData.append('file', this.file);
+            // //Make the request to the POST /single-file URL
+            // this.$http.post( 'http://localhost:3000/../assets',formData,{
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            //     }
+            // ).then(function(){
+            //     console.log('SUCCESS!!');
+            // })
+            // .catch(function(){
+            //     console.log('FAILURE!!');
+            // });
+        },
+        // created(){
+        //       if(profile.submitted=true){
+        //           console.log(this.$route.params.id)
+        //         //   this.fetchStylistProfile();
+        //         this.$http.get('http://localhost:3000/stylistprofile/' + this.$route.params.id ,{
+        //             // image: 
+        //             // name
+        //             // workplace: this.profile.workplace,
+        //             // description: this.profile.description,
+        //             // services: this.profile.services.join(','),
+        //             // submitted: this.profile.submitted
+        //     })
+              
+        //     }
+        // }
+        // postProfile (){
+            
+        //     this.$http.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json',this.profile).then(function(data){
+        //         console.log(data);
+        //         console.log(this.profile.file)
+
+        //         this.submitted = true;
+        //     });
+        // }
+            // let profile = this.profile
+            // console.log(profile)
+            // this.$store.dispatch('addStylistProfile',{ })
+            // this.addStylistProfile(this.profile)
+        // },
     }
      
     
@@ -133,8 +370,8 @@ export default {
 </script>
 <style scoped>
 #stylist-profile{
-    margin:20px auto;
-    padding-left:200px;
+    /* margin:20px auto; */
+    padding-left:20px;
     background-image: url("../assets/bg2.jpg");
     background-repeat:  no-repeat;
     background-position:   fixed;
@@ -145,13 +382,120 @@ export default {
     color:black;
     
 }
-/* .flex-container{
-    display: flex;
-    justify-content:center;
-    align-items: center;
-     
 
+  .input-file {
+    opacity: 0; /* invisible but it's there! */
+    width: 100%;
+    height: 200px;
+    position: absolute;
+    cursor: pointer;
+  }
+
+
+.myServices{
+    padding-left:20px;
+    margin-right: 400px;
+    font-size:20px;
+    
+}
+.flex-container{
+    margin-right:500px;
+}
+.selected{
+    background-color: green !important ; 
+    color:white;
+    cursor: pointer;
+}
+.stylist-page{
+    background-image: url("../assets/bg7.jpg");
+    background-repeat:  no-repeat;
+    background-position:   fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    /* margin: auto; */
+    height:100vh;
+}
+.timeCalender{
+   position:absolute;
+   top:0;
+   right:0;
+   margin-left:900px;
+   padding-top:70px;
+   
+   padding-left: 5px;
+   height:500px;
+   margin-top:50px;
+
+
+}
+.datePicker{
+    padding:20px;
+    margin-top:10px;
+    padding-left: 200px;
+}
+.time-table{
+    width:690px;
+    background-color:yellow;
+    font-size:12px;
+    margin-top:20px;
+    margin-left:5px;
+    font-weight:700; 
+    margin-right:20px;
+}
+/* table, th, td {
+  border: 1px solid black;
 } */
+.time-grids{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+
+}
+.time-grids > div {
+  background-color: #f1f1f1;
+  width: 51px;
+  margin: 1px;
+  text-align: center;
+  /* line-height: 20px; */
+  font-size: 10px;
+}
+.first-hour{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+  height:40px;
+ 
+
+}
+.first-hour > div {
+  background-color: #f1f1f1;
+  opacity:0.8;
+  width: 51px;
+  margin: 1px;
+  /* text-align: center; */
+  /* line-height: 20px; */
+  font-size: 10px;
+  height:35px;
+  cursor: pointer;
+}
+.second-hour{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+  
+
+}
+.second-hour > div {
+  background-color: #f1f1f1;
+  opacity: 0.8;
+  width: 51px;
+  margin: 1px;
+  text-align: center;
+  font-size: 10px;
+  cursor: pointer;
+}
 input[type="text"], textarea{
     display:block;
     width:50%;
@@ -166,20 +510,26 @@ label{
     margin:20px 0 10px;
 }
 
-
 #previewBlog{
-    border:1px saddlebrown #ccc;
-    border: 1px solid;
+    border:2px purple #ccc;
+    border: 5px solid;
+    border-radius:3px;
     padding: 10px;
-    box-shadow: 5px 10px #888888;
     margin:30px 0;
-    color:white;
+    color:black;
     font-size: 20px;
-    max-width: 700px;
+    min-width: 300px;
+    max-width: 400px;
+    margin-top:50px;
+    height:500px;
     
 }
 h3{
-    margin-top:10px;
+    margin-top:5px;
+    padding:10px;
+}
+h4{
+    padding:10px;
 }
 #checkboxes input{
     margin-right:10px;

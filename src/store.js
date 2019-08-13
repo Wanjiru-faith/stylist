@@ -1,61 +1,89 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios';
+import axios from 'axios'
+// import VuexPersistence from 'vuex-persist'
 
 Vue.use(Vuex)
 
+
+
 export default new Vuex.Store({
+  // plugins: [vuexCookie.plugin, vuexLocal.plugin],
+
   state: {
     stylists:[],
-    customerSignIn:[],
+    specificStylist:[],
+    stylistprofile:[],
+    customerSignIn:[], 
     customerLogin:[],
     filterDetails:[],
     stylistSignIn:[],
     stylistLogin:[],
-
   },
 
   getters: {
-    allStylists: state => {
-        return state.stylists
+    allprofiles: state => {
+        return state.stylists;
     }
 },
   actions: {
-    fetchStylist({commit}){
-      console.log("We are here");
-      axios({
-        method: "GET",
-        url: 'https://matatu-booking.firebaseio.com/stylists-profiles/posts.json',
-        headers: {
-          'Content-Type': 'application/json'
-        }})
-      .then(function (response) {
-        console.log("We have data well");
-        console.log(response.data);
-        //call the muation setTodos using commit and the todos data which is response.data
-        commit('setStylist', response.data);
-      })
-      .catch(function (error) {
-        console.log("We have an error");
-        console.log(error.response);
-      });
+ 
+  fetchStylist({commit}) {
+    let url = 'https://matatu-booking.firebaseio.com/stylist-profile/posts.json';
+    axios.get(url)
+    .then(function (response) {
+      commit('setStylist', response.data); 
+      console.log(response.data);
+       })
        
-
   },
-   async addStylistProfile({commit},{profile}){  
-    const response = axios.post('https://matatu-booking.firebaseio.com/stylists-profiles/posts.json', {profile});
+  
+   addStylistProfile({commit},){  
+    const response = axios.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json', {profile});
     commit('newStylistProfile', response.data); 
     // dispatch('newStylistProfile');
     // console.log(response.data); 
     // console.log(profile);
 },
+bookingStylist({commit}, id){
+  axios.get('https://matatu-booking.firebaseio.com/stylist-profile/posts.json/${id}');
+  commit('showStylist', id);
+  console.log(id); 
+},
+fetchStylistProfile({commit},id){
+  axios.get('http://localhost:3000/stylistprofile/', this.$route.params.id);
+  commit('stylistPreview',id);
+  console.log(id)
+}
+// signInForm({commit}, form){  
+//   const response = axios.post('', {form});
+//   commit('newSignIn', response.data); 
+//   // dispatch('newSignIn');
+//   console.log(response.data); 
+//   // console.log(profile);
+// },
+// logInForm({commit}, form){  
+//   const response = axios.post('', {form});
+//   commit('newLogIn', response.data)
+
+  // dispatch('logInInForm');
+  // console.log(response.data); 
+  // console.log(profile);
+// },
 
   },     
   mutations: {
-    setStylist:(state, stylists) => (state.stylists = stylists),
-    newStylistProfile: (state, stylists) => state.stylists.push(stylists)
+    setStylist(state, profiles) {
+      state.stylists = profiles
+    },
+    newStylistProfile: (state, stylists) => state.stylists.push(stylists),
+    // newSignIn:(state, customerSignIn) => state.customerSignIn.unshift(customerSignIn),
+    // newLogIn:(state, customerLogIn) => state.customerLogIn.unshift(customerLogIn)
+    showStylist:(state, id) => (state.stylists = state.stylists.push(stylists => stylists.id)),
+    stylistPreview: (state, id) => (state.stylistprofile = state.stylistPreview.push(stylistprofile => stylistprofile.id))
     
   
   }
 }) 
+
 

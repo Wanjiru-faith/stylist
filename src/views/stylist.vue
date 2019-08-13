@@ -3,19 +3,20 @@
         
         <div class="grid-container" >
             <div class="menu">
+                
                 <div class ="stylists">
                 <div class=Image>
-                <img :src="profile.selectedImage" >
+                <img :src="profile.imagePreview" >
                 </div>
             
                 <div class= "stylistInformation">
-                <p style="float:left;">Name: {{profile.stylistName}}</p>
-                <p style="float:left;"><rating/></p>
+                <p style="float:left;">Name: {{profile.stylistName}}</p><br>
+                <p style="float:left;"><rating/></p><br>
                 <p style="float:left;"> Workplace: {{profile.workplace}}</p> <br>
                 <p style="float:left;"> Description: {{profile.decription}} </p>
+                <!-- {{$store.state.profile}} -->
                 </div>
                 </div>
-
             </div>
         
 
@@ -33,61 +34,50 @@
 
             </div>
             <div class="time-table">
-
-            <table>
-                <tr>
-                    <th>TIME:</th>
-                    <th>10PM - MIDNIGHT</th>
-                    <th>MIDNIGHT - 2AM.</th>
-                    <th>2AM. - 4AM.</th>
-                    <th>4AM. - 6AM.</th>
-                    <th>6AM. - 8AM.</th>
-                    <th>8AM. - NOON</th>
-                    <th>NOON - 2PM.</th>
-                    <th>2PM. - 4PM.</th>
-                    <th>4PM. - 6PM.</th>
-                    <th>6PM. - 8PM.</th>
-                    <th>8PM. - 10PM.</th>
-
-                </tr>
-                <tr>
-                    <td>First Hour</td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                </tr>
-                <tr>
-                    <td>Second Hour</td>
-                    <td></td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                </tr>
-                </table>
+                <div class="time-grids">
+                    <div>Time</div>
+                    <div>6AM.-8AM.</div>
+                    <div>8AM. -10AM.</div>  
+                    <div>10AM. - NOON</div>
+                    <div>N00N - 2PM.</div>
+                    <div>2PM. - 4PM.</div>  
+                    <div>4PM. - 6PM.</div>
+                    <div>6PM. - 8PM.</div>
+                    <div>8PM - 10PM.</div>  
+                    <div>10PM.- MIDNIGHT</div>
+                    <div>MIDNIGHT - 2AM.</div>
+                    <div>2AM. - 4AM.</div>
+                    <div>4AM. - 6AM.</div>
                 </div>
+                
+                <div class="first-hour">
+
+                
+                    <div>First Hour</div>
+                    <div ref="firstHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor(index)" v-for="(text,index) in firstHourTexts" :key="index">
+                        {{ text }}
+                    </div>
+                </div>
+                
+                <div class="second-hour">
+                <div>Second hour</div>
+                    <div ref="secondHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor1(index)" v-for="(text,index) in secondHourTexts" :key="index" selected>
+                        {{ text }}
+                    </div>
+                </div>
+
 
         </div> 
         </div>
+    </div>
     </div>
 </template>
 
 <script>
 import Rating from "../components/rating.vue"
+import { mapGetters, mapActions } from 'vuex';
+import { mapState } from 'vuex'
+import store from "../store"
 export default {
     components:{
         Rating
@@ -98,31 +88,103 @@ export default {
         id:this.$route.params.id,
         profile:{},
         filter:{},
+        table:{
+            time:'',
+            firstHour:'',
+            secondHour:''
+        },
+        is_selected:true,
+        firstHourTexts:[
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open', 
+        ],
+          secondHourTexts:[
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open',
+            'open', 
+        ]
+
+            
         
-
-
     }
     
   }, 
+        // name:"stylists",
+    // implement the mapGetters
+    // computed:{
+    //     stylists(){
+    //     return this.$store.getters.allprofiles;
+    //     }
+    //     }, 
       created(){
-
+        //   this.bookingStylist(id);
+        console.log(this.$route.params)
+        
+        this.$http.get('https://matatu-booking.firebaseio.com/stylist-profile/posts/' + this.id + '.json')
+        .then(function(data){
+            return data.json();
+        }).then(function(data){
+            this.profile = data;
+            console.log(data)
+        })
     },
 
     methods: {
-        fetchProfile1() {
-            let url = `https://matatu-booking.firebaseio.com/stylists-profiles/posts/${this.id}.json`
-            return this.$http.get(url).then(function(data){
-                return data.json();  
-            })
-        },
-        fetchProfile2(){
-            // read filter from store
-             let url = `https://matatu-booking.firebaseio.com/stylists-profiles/posts/${this.id}.json`
-             return this.$http.get(url).then(function(data){
-            return data.json();
-            console.log(data);
+        changeColor(index){
+            let vm = this;
+            if(this.$refs.firstHourTexts[index].classList.contains('selected')) {
+                this.$refs.firstHourTexts[index].classList.remove('selected');
+                // Vue.set(this.texts, index, 'open');
+                vm.firstHourTexts.splice(index, 1, 'open');
+                // this.texts[index] = 'open';
+            } else {
+                this.$refs.firstHourTexts[index].classList.add('selected')
+                // Vue.set(this.texts, index, 'booked');
+                vm.firstHourTexts.splice(index, 1, 'booked');
+                // this.texts[index] = 'booked';
+            }
+            // console.log(this.is_selected)
+            // this.is_selected = !this.is_selected;
+            // if(this.is_selected){
+            //     this.text = 'booked';
+            // }else{
+            //     this.text = 'open';
+            // }
 
-            })
+        },
+              changeColor1(index){
+            let vm = this;
+            if(this.$refs.secondHourTexts[index].classList.contains('selected')) {
+                this.$refs.secondHourTexts[index].classList.remove('selected');
+                // Vue.set(this.texts, index, 'open');
+                vm.secondHourTexts.splice(index, 1, 'open');
+                // this.texts[index] = 'open';
+            } else {
+                this.$refs.secondHourTexts[index].classList.add('selected')
+                // Vue.set(this.texts, index, 'booked');
+                vm.secondHourTexts.splice(index, 1, 'booked');
+                // this.texts[index] = 'booked';
+            }
+            
 
         }
 
@@ -133,6 +195,17 @@ export default {
 </script>
 
 <style scoped>
+.selected{
+    background-color: green !important ; 
+    color:white;
+    cursor: pointer;
+
+}
+.notSelected{
+    background-color: black !important;
+    color:white;
+    cursor: pointer;
+}
 .stylist-page{
     background-image: url("../assets/bg7.jpg");
     background-repeat:  no-repeat;
@@ -217,15 +290,66 @@ export default {
     position:top;
 }
 .time-table{
-    width:700px;
+    width:690px;
     background-color:yellow;
     font-size:12px;
     margin-top:200px;
     margin-left:100px;
+    font-weight:700; 
 }
-table, th, td {
+/* table, th, td {
   border: 1px solid black;
+} */
+.time-grids{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+
 }
+.time-grids > div {
+  background-color: #f1f1f1;
+  width: 51px;
+  margin: 1px;
+  text-align: center;
+  /* line-height: 20px; */
+  font-size: 10px;
+}
+.first-hour{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+  height:40px;
+ 
+
+}
+.first-hour > div {
+  background-color: #f1f1f1;
+  opacity:0.8;
+  width: 51px;
+  margin: 1px;
+  /* text-align: center; */
+  /* line-height: 20px; */
+  font-size: 10px;
+  height:35px;
+  cursor: pointer;
+}
+.second-hour{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+  
+
+}
+.second-hour > div {
+  background-color: #f1f1f1;
+  opacity: 0.8;
+  width: 51px;
+  margin: 1px;
+  text-align: center;
+  font-size: 10px;
+  cursor: pointer;
+}
+
 
 
 
