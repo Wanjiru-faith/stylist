@@ -45,16 +45,16 @@ export default new Vuex.Store({
     // console.log(response.data); 
     // console.log(profile);
 },
-bookingStylist({commit}, id){
-  axios.get('https://matatu-booking.firebaseio.com/stylist-profile/posts.json/${id}');
-  commit('showStylist', id);
-  console.log(id); 
-},
-fetchStylistProfile({commit},id){
-  axios.get('http://localhost:3000/stylistprofile/', this.$route.params.id);
-  commit('stylistPreview',id);
-  console.log(id)
-}
+// bookingStylist({commit}, id){
+//   axios.get('https://matatu-booking.firebaseio.com/stylist-profile/posts.json/${id}');
+//   commit('showStylist', id);
+//   console.log(id); 
+// },
+// fetchStylistProfile({commit},id){
+//   axios.get('http://localhost:3000/stylistprofile/', this.$route.params.id);
+//   commit('stylistPreview',id);
+//   console.log(id)
+// }
 // signInForm({commit}, form){  
 //   const response = axios.post('', {form});
 //   commit('newSignIn', response.data); 

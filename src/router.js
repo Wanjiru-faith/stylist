@@ -11,16 +11,16 @@ import stylist from './views/stylist.vue'
 import HelloWorld from './components/HelloWorld.vue'
 // import StylistprofilePreview from './views/StylistprofilePreview.vue'
 //Importing modules @Brahmmeswar
-const express = require('express');
+// const express = require('express');
 // const router = express.Router();
 
 // const Contact = require('../models/contacts');
 
-router.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+// router.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+//   });
 
 Vue.use(Router)
 
@@ -33,7 +33,7 @@ var router =  new Router({
       //only authenticated users should see it
       requiresAuth: true,
       guest:false,
-      is_stylist:false}},
+      is_stylist:false}},      
     {path: '/about',
       name: 'about',
       // route level code-splitting

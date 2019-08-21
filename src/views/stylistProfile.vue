@@ -5,7 +5,7 @@
         <keep-alive>
             <form v-if="!profile.submitted" enctype="multipart/form-data">
            <label>Upload Image {{profile.file}} </label>
-            <div class="imageUpload">
+            <div class="imageUpload">     
                 <div class="image-preview" >
                     <img :src="profile.imagePreview" v-show="profile.showPreview" height="220" width="220">
                  </div>
@@ -76,7 +76,7 @@
             
                 <h4>My Services:</h4>
                 <ul>   
-                <li v-for="service in profile.services"> {{service}} </li>
+                <li v-for="service in profile.services" :key="service"> {{service}} </li>
                 </ul>
                 <div id="editDelete" v-if="profile.submitted" > 
                     <button>EDIT</button>
@@ -115,12 +115,10 @@
                 </div>
                 
                 <div class="first-hour">
-
-                
                     <div>First Hour</div>
                     <div ref="firstHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor(index)" v-for="(text,index) in firstHourTexts" :key="index">
-                        {{ text }}
-                    </div>
+                        {{ text }}         
+                    </div>      
                 </div>
                 
                 <div class="second-hour">
@@ -155,11 +153,11 @@ export default {
 
     data(){
         return{
-            profile:{
+            profile:{             
                 file:'',
-                stylistName:" ",
-                workplace:" ",
-                description:" ",
+                stylistName:" ",        
+                workplace:" ",     
+                description:" ",   
                 services:[],
                 showPreview: false,
                 imagePreview: '../assets',
@@ -199,8 +197,8 @@ export default {
    
     //fake jason server to store user inputs
     methods:{
-        ...mapActions(['addStylistProfile']),
-        ...mapActions(['fetchStylistProfile']),
+        // ...mapActions(['addStylistProfile']),
+        // ...mapActions(['fetchStylistProfile']),
        postProfile(e){
             e.preventDefault();
             //call addTodo function
@@ -213,11 +211,11 @@ export default {
             name: this.profile.name,
             workplace: this.profile.workplace,
             description: this.profile.description,
-            services: this.profile.services.join(','),
+            services: this.profile.services.join(','),    
             submitted: this.profile.submitted
         })
         // if(this.profile.submitted = true){
-        //     let userId = response.body.stylis_name.id;
+        //     let userId = response.body.stylist_name.id;
         //     this.$router.push(`stylistprofilepreview/${userId}`)
         // }
         
@@ -267,39 +265,39 @@ export default {
             fileReader.readAsDataURL(e.target.files[0])
             fileReader.onload = e => {
                  this.profile.imagePreview = e.target.result
-                 this.profile.showPreview = true;
+                //  this.profile.showPreview = true;
             }
 
 
-            // const file = this.$refs.file.files[0];
-            // this.profile.imagePreview = URL.createObjectURL(file);
-            // console.log(this.profile.imagePreview)
-            // //Set the local file variable to what the user has selected.
-            // this.file = this.$refs.file.files[0];
-            // //Initialize a File Reader object
-            // let reader  = new FileReader();
-            // /*
-            // Add an event listener to the reader that when the file
-            // has been loaded, we flag the show preview as true and set the
-            // image to be what was read from the reader.
-            // */
-            // reader.addEventListener("load", function () {
-            // this.profile.showPreview = true;
-            // this.profile.imagePreview = reader.result;
-            // }.bind(this), false);
+            const file = this.$refs.file.files[0];
+            this.profile.imagePreview = URL.createObjectURL(file);
+            console.log(this.profile.imagePreview)
+            //Set the local file variable to what the user has selected.
+            this.file = this.$refs.file.files[0];
+            //Initialize a File Reader object
+            let reader  = new FileReader();
+            /*
+            Add an event listener to the reader that when the file
+            has been loaded, we flag the show preview as true and set the
+            image to be what was read from the reader.
+            */
+            reader.addEventListener("load", function () {
+            // this.profile.showPreview = true;     
+            this.profile.imagePreview = reader.result;
+            }.bind(this), false);
 
-            // //Check to see if the file is not empty.
-            // if( this.file ){
-            // // Ensure the file is an image file.
-            //     if ( /\.(jpe?g|png|gif)$/i.test( this.file.name ) ) {
-            //         /*
-            //         Fire the readAsDataURL method which will read the file in and
-            //         upon completion fire a 'load' event which we will listen to and
-            //         display the image in the preview.
-            //         */
-            //         reader.readAsDataURL( this.file );
-            //     }
-            // }
+            //Check to see if the file is not empty.
+            if( this.file ){
+            // Ensure the file is an image file.
+                if ( /\.(jpe?g|png|gif)$/i.test( this.file.name ) ) {
+                    /*
+                    Fire the readAsDataURL method which will read the file in and
+                    upon completion fire a 'load' event which we will listen to and
+                    display the image in the preview.
+                    */
+                    reader.readAsDataURL( this.file );
+                }
+            }
         },
         onUpload(e){
             e.preventDefault();
@@ -311,42 +309,27 @@ export default {
             const config= {
                 hearders: {
                     'Content-Type' : 'multipart/form-data'
-
                 }
             }
-            // this.$http.post( 'http://localhost:3000/assets?token=' + token, data, config)
+            this.$http.post( 'http://localhost:3000/assets?token=' + token, data, config)
             // Initialize the form data
-            // let formData = new FormData()
-            // //Add the form data we need to submit
-            // formData.append('file', this.file);
-            // //Make the request to the POST /single-file URL
-            // this.$http.post( 'http://localhost:3000/../assets',formData,{
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }
-            //     }
-            // ).then(function(){
-            //     console.log('SUCCESS!!');
-            // })
-            // .catch(function(){
-            //     console.log('FAILURE!!');
-            // });
-        },
-        // created(){
-        //       if(profile.submitted=true){
-        //           console.log(this.$route.params.id)
-        //         //   this.fetchStylistProfile();
-        //         this.$http.get('http://localhost:3000/stylistprofile/' + this.$route.params.id ,{
-        //             // image: 
-        //             // name
-        //             // workplace: this.profile.workplace,
-        //             // description: this.profile.description,
-        //             // services: this.profile.services.join(','),
-        //             // submitted: this.profile.submitted
-        //     })
-              
-        //     }
-        // }
+            let formData = new FormData()
+            //Add the form data we need to submit
+            formData.append('file', this.file);
+            //Make the request to the POST /single-file URL
+            this.$http.post( 'http://localhost:3000/../assets',formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+                }
+            ).then(function(){
+                console.log('SUCCESS!!');
+            })
+            .catch(function(){
+                console.log('FAILURE!!');
+            });
+        },    
+  
         // postProfile (){
             
         //     this.$http.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json',this.profile).then(function(data){
@@ -361,7 +344,24 @@ export default {
             // this.$store.dispatch('addStylistProfile',{ })
             // this.addStylistProfile(this.profile)
         // },
-    }
+    },
+          created(){
+            console.log("hi")
+            //   if(profile.submitted=true){
+            //       console.log(this.$route.params.id)
+                  
+            //     //   this.fetchStylistProfile();
+            //     this.$http.get('http://localhost:3000/stylistprofile/' + this.$route.params.id).
+            //     then(res => {
+            //         console.log(res.data)
+            //         })
+            //     .catch(e => {
+            //         console.log(e.message)
+            //         }
+            //     )
+              
+            // }         
+        }
      
     
 }
@@ -563,8 +563,5 @@ button:hover{
     color:Purple;
 
 }
-
-
-
 </style>
 

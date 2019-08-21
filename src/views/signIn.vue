@@ -167,7 +167,7 @@ export default {
                                   this.$router.push(this.$route.params.nextUrl)
                               }
                               else{
-                                  this.$router.push('/')
+                                  this.$router.push('/')    
                               }
                           }
                           
@@ -296,7 +296,7 @@ select::-ms-expand {
 select {
     -webkit-appearance: menulist !important; 
     color:red;
-    font-weight:;
+    /* font-weight:; */
     margin: 7px 0;
     outline:none;
 }
