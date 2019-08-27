@@ -70,6 +70,7 @@
 <script>
 import { required, integer, between,email,password } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex';
+import Swal from 'sweetalert2'
 
 export default {
   data(){
@@ -103,20 +104,34 @@ export default {
     // ...mapActions(['logInForm']),
     submitForm(){
       this.$v.form.$touch()
+
+       this.$http.post('http://localhost:3000/login',{
+        email: this.form.email,
+        password: this.form.password
+        }).then(r => {
+          console.info(r)
+        }).catch(e => {
+          console.error(e.message)
+        })
+
+
       if(!this.$v.form.$invalid && !this.$v.form.$error){
+        console.log('whats up')
         this.$http.post('http://localhost:3000/login',{
         email: this.form.email,
         password: this.form.password
         })
         // this.logInForm(this.form)
           .then(response => {
+            console.log("we get here")
+
     //use the response from the server 
      let is_stylist = response.data.user.is_stylist
               localStorage.setItem('user',JSON.stringify(response.data.user))
               localStorage.setItem('jwt',response.data.token)
 
-              if (localStorage.getItem('jwt') != null){
-                  // this.$emit('loggedIn')
+              if (localStorage.getItem('jwt') != null){    
+                  console.log('okorr')
                   if(this.$route.params.nextUrl != null){
                       this.$router.push(this.$route.params.nextUrl)
                   }
@@ -127,12 +142,21 @@ export default {
                           // console.log(`stylistprofile/${userId}`)
                       }
                       else {
-                          this.$router.push({path:'/'})
+                          this.$router.push({path:'/'})  
                       }
                   }
               }
   })
-  console.log('Form Submitted', this.form)
+  .catch(error =>{
+    if (error.status == 404) 
+      Swal.fire('title...', 'not found', 'warning')
+    else if (error.status == 500) 
+      Swal.fire('title...', 'hfdftgrdtrd', 'warning')
+    else
+      Swal.fire('title...', 'something else', 'warning')
+    
+  })
+  
         
       }else{
         console.log('invalid form')

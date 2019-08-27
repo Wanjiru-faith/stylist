@@ -9,18 +9,8 @@ import Filter from './views/Filter.vue'
 import Stylistprofile from './views/stylistProfile.vue'
 import stylist from './views/stylist.vue'
 import HelloWorld from './components/HelloWorld.vue'
-// import StylistprofilePreview from './views/StylistprofilePreview.vue'
-//Importing modules @Brahmmeswar
-// const express = require('express');
-// const router = express.Router();
+import stylistProfilePreview from './views/stylistProfilePreview.vue'
 
-// const Contact = require('../models/contacts');
-
-// router.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-//   });
 
 Vue.use(Router)
 
@@ -61,9 +51,17 @@ var router =  new Router({
       requiresAuth: true,
       is_stylist : true,
       guest:false
-  }},
-    {path:'/stylist/:id', component:stylist},
-    // {path:'/stylistprofilepreview', component:StylistprofilePreview},
+  }
+},
+    // {path:'/stylist/:id', component:stylist},
+    {path:'/stylistProfilePreview/:id', component:stylistProfilePreview,
+    meta: { 
+      //only stylist users should see it
+      requiresAuth: true,
+      is_stylist : true,
+      guest:false
+  }
+  },
     {path:'/HelloWorld', component:HelloWorld, name:'HelloWorld',
   meta:{
       guest:true
@@ -79,12 +77,12 @@ router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
       if (localStorage.getItem('jwt') == null) {
         //next is a callback function that continues the processing of the request
-          next({
+          next({ 
               path: '/login',
               params: { nextUrl: to.fullPath }
           })
       } else {
-          let user = JSON.parse(localStorage.getItem('user')) 
+          let user = localStorage.getItem('user')  ? JSON.parse(localStorage.getItem('user')) : [];
           if(to.matched.some(record => record.meta.is_stylist )) {
               if(user.is_stylist == 1){
                   next()

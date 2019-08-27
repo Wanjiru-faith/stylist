@@ -3,7 +3,7 @@
         <div class="flex-container">
         <h2> My profile </h2>
         <keep-alive>
-            <form v-if="!profile.submitted" enctype="multipart/form-data">
+            <form  enctype="multipart/form-data" v-if="!profile.submitted">
            <label>Upload Image {{profile.file}} </label>
             <div class="imageUpload">     
                 <div class="image-preview" >
@@ -20,7 +20,7 @@
             </div>
             <label>Name:</label>
             <!--lazy is an input modify-->
-            <input type ="text"  v-model.lazy="profile.stylistName" required/>
+            <input type ="text"  v-model.lazy="profile.name" required/>
             <rating/>
             
             <label>Workplace</label>
@@ -52,40 +52,13 @@
            </select> -->
            <br>
            <div id="postBlog" >
-           <button @click.prevent="postProfile" :disabled="!this.profile"> Update Profile </button>
+           <button @click.prevent="postProfile" 
+           :disabled="!this.profile"
+           > Update Profile </button>
            </div>
         </form>
 
         </keep-alive>
-
-        <div id="previewBlog" v-if="profile.submitted">
-
-            <div id="thanksMessage" v-if="profile.submitted"> 
-                <h3>Thanks for adding your post!!</h3>
-            </div>
-                <h3>Your profile preview</h3>
-            <div class="profileImage"> 
-                <h4>Image</h4><br>
-                <img :src="profile.imagePreview" height="220" width="220">
-            </div>
-            <div class= "stylistInformation">
-                <h4>Name: {{profile.stylistName}}</h4>
-                <h4><rating/></h4>
-                <h4>Workplace: {{profile.workplace}}</h4>
-                <h4>Description: {{profile.description}}</h4>
-            
-                <h4>My Services:</h4>
-                <ul>   
-                <li v-for="service in profile.services" :key="service"> {{service}} </li>
-                </ul>
-                <div id="editDelete" v-if="profile.submitted" > 
-                    <button>EDIT</button>
-                    <button>DELETE</button>
-                </div>
-           
-        </div>
-
-        </div>
 
     </div>
     <div class="timeCalender">
@@ -127,7 +100,6 @@
                         {{ text }}
                     </div>
                 </div>
-
         </div>
         </div> 
     </div>
@@ -135,6 +107,7 @@
 </template>
     
 <script>
+import Swal from 'sweetalert2'
 // import axios from 'axios'
 import Rating from "../components/rating.vue"
 // import imageUpload from "../views/imageUpload.vue"
@@ -148,14 +121,13 @@ export default {
     components:{
         Rating,
         // imageUpload
-
     },
-
     data(){
         return{
+            registered:false,
             profile:{             
-                file:'',
-                stylistName:" ",        
+                file:'',        
+                name:" ",     
                 workplace:" ",     
                 description:" ",   
                 services:[],
@@ -191,7 +163,8 @@ export default {
                 'open',
                 'open',
                 'open', 
-            ]
+            ],
+            profiles:[]
         }
     },
    
@@ -199,28 +172,47 @@ export default {
     methods:{
         // ...mapActions(['addStylistProfile']),
         // ...mapActions(['fetchStylistProfile']),
-       postProfile(e){
-            e.preventDefault();
-            //call addTodo function
-            // this.addStylistProfile(profile)
+       postProfile(){
+
     //   this.$v.form.$touch()
     //   if(!this.$v.form.$invalid && !this.$v.form.$error)
-        console.log(this.profile.file)
-        this.$http.post('http://localhost:3000/stylistprofile/' + this.$route.params.id ,{
+        
+        console.log(this.profile)
+        // this.profile.submitted = true
+        console.log(this.profile.submitted)
+        let profileData = {
             image: this.profile.imagePreview,
             name: this.profile.name,
             workplace: this.profile.workplace,
             description: this.profile.description,
-            services: this.profile.services.join(','),    
-            submitted: this.profile.submitted
-        })
-        // if(this.profile.submitted = true){
-        //     let userId = response.body.stylist_name.id;
-        //     this.$router.push(`stylistprofilepreview/${userId}`)
-        // }
+            services: this.profile.services.join(','),     
+            submitted: this.profile.submitted    
+        }
         
+        // let userId = response.body.stylist_profile.id;
+        this.$http.post('http://localhost:3000/stylistprofile', profileData  
+        )    
+        .then(response => {
+            localStorage.setItem('stylist_profile',JSON.stringify(response.data.stylist_profile))
+            localStorage.setItem('jwt',response.data.token)
 
-      
+            if (localStorage.getItem('jwt') != null){//if user has an account already
+                Swal.fire('title...', 'You already have an account!', 'warning')
+                // if(localStorage.getItem('jwt') = null){//I need explanation!!!
+                // }   
+            }else{
+                    return this.profile.submitted = false
+                }
+        })
+        .catch(error => {
+          console.error(error);  
+        //   Swal.fire('title...', 'You already have an account!', 'warning')
+        });
+        // if(this.profile.submitted = true){
+        //     let userId = response.body.stylist_profile.id;
+        //     // this.$router.push(`stylistprofilepreview/${userId}`)
+        // }
+        console.log(this.profile)
         },
                 changeColor(index){
             let vm = this;
@@ -329,41 +321,10 @@ export default {
                 console.log('FAILURE!!');
             });
         },    
-  
-        // postProfile (){
-            
-        //     this.$http.post('https://matatu-booking.firebaseio.com/stylist-profile/posts.json',this.profile).then(function(data){
-        //         console.log(data);
-        //         console.log(this.profile.file)
+   
 
-        //         this.submitted = true;
-        //     });
-        // }
-            // let profile = this.profile
-            // console.log(profile)
-            // this.$store.dispatch('addStylistProfile',{ })
-            // this.addStylistProfile(this.profile)
-        // },
     },
-          created(){
-            console.log("hi")
-            //   if(profile.submitted=true){
-            //       console.log(this.$route.params.id)
-                  
-            //     //   this.fetchStylistProfile();
-            //     this.$http.get('http://localhost:3000/stylistprofile/' + this.$route.params.id).
-            //     then(res => {
-            //         console.log(res.data)
-            //         })
-            //     .catch(e => {
-            //         console.log(e.message)
-            //         }
-            //     )
-              
-            // }         
-        }
-     
-    
+
 }
  
 

@@ -94,6 +94,7 @@ $invalid  && $v.form.name.$invalid"
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import { required, integer, between,email } from 'vuelidate/lib/validators'
 // import { mapActions } from 'vuex';
 
@@ -110,9 +111,6 @@ export default {
         is_stylist : 0,
         passwordConfirmation : "",
       },
-      
-            
-       
     }
   },
   validations:{
@@ -145,8 +143,8 @@ export default {
       shouldAppendErrorClass(field){
         return field.$error
       },
-      submitForm(){
 
+      submitForm(){
       if(!this.$v.form.$invalid && this.form.password === this.form.passwordConfirmation) { 
         console.log('Form Submitted', this.form)
         // this.$router.push({path: '/'})
@@ -167,13 +165,16 @@ export default {
                                   this.$router.push(this.$route.params.nextUrl)
                               }
                               else{
-                                  this.$router.push('/')    
+                                  // this.$router.push('/stylistprofile/:id') 
+                                  let userId = response.body.user.id;
+                                  this.$router.push(`stylistprofile/${userId}`)
+                                  Swal.fire('title...', 'You have succesfully Signed-up', 'success')   
                               }
                           }
-                          
               })
         .catch(error => {
-          console.error(error);
+          // console.error(error);  
+          Swal.fire('title...', 'You already have an account!', 'warning')
         });
 
       } else {
