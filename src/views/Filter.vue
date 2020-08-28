@@ -1,39 +1,23 @@
 <template>
 <div>
-
     <div class ="filter-page" 
     :style="{ backgroundImage: `url(${currentImage})`  }" >
-
-    <!-- <div id="text">
-    <h3  style="font-size:50px; padding-left:50px;">Welcome to Msusi</h3>
-    <h2 style="">Book Your Hair Stylist with Ease</h2><br>
-    <h4 style="font-size:20px; padding-left:30px">Choose who will make you stylish <br>based on your experience <br>and the experience of others</h4>
-    </div> -->
     
     <div class="flex-container" id="filter">
-        
-         <div class="seeLeft">
-     <a class="prev" @click.prevent="goBack">&#10094;</a>
-     <!-- <div style="color:white; display:none">
-         {{datePicked}}
-     </div> -->
-     <a class="next" @click.prevent="goNext">&#10095;</a>
-     </div>  
-
-    <div class="select-location">
-        <select class="classic" v-model="filter.selectedLocation" >
-        <option value="" disabled selected="selected" data-default>Location</option>
-        <option class="items" v-for ="location in locations"
-         :value="location.id" 
-         :key="location.id" 
-         placeholder="Locations"
-         >
-            {{location.town}}     
-            </option> 
+        <!-- <div class="seeLeft">
+            <a class="prev" @click.prevent="goBack">&#10094;</a>
+            <a class="next" @click.prevent="goNext">&#10095;</a>
+        </div> -->
+        <div class="select-location">
+            <select class="classic" v-model="filter.selectedLocation" >
+                <option value="" disabled selected="selected" data-default>Location</option>
+                <option class="items" v-for ="location in locations"
+                    :value="location.id" 
+                    :key="location.id" 
+                    placeholder="Locations"
+                >{{location.town}}</option> 
             
-        </select>
-        
-         
+            </select>
     </div>    
 
     <div class="select-location">
@@ -62,28 +46,12 @@
     </div>
 
     <div class="viewStylist">
-        <button @click.prevent="submitButton" class="viewStylistText" >Stylists Availaable </button>
+        <button @click.prevent="submitButton" class="viewStylistText" >Stylists Available </button>
     </div>
-
-    <!-- <div class="errorMessage">
-            <p style="color:red">{{errors.location}}</p>
-            <p style="color:red">{{errors.date}}</p>
-            <p style="color:red">{{errors.hairstyle}}</p>
-    </div> -->
-    
-    
-
-    <!-- <div style="text-align:center" class="dots">
-  <span class="dot" @click="currentSlide(1)"></span> 
-  <span class="dot" @click="currentSlide(2)"></span> 
-  <span class="dot" @click="currentSlide(3)"></span> 
-</div> 
- <p v-if="!this.location" style="padding-top:10px; color:red;">Please Identify the style you would like done!</p> -->
     </div>
-    
-    
     
 </div>
+<div><landing/> </div>
 </div>
     
 </template>
@@ -91,43 +59,45 @@
 <script>  
 import { setTimeout, setInterval } from 'timers';
 // import { required } from 'vuelidate/lib/validators'
-
+import landing from "../components/landing.vue"
 import images from '../assets'
 
 export default {
+    components:{
+    landing
+  },
     created(){
-        setInterval(this.nextImage,8000)
+        setInterval(this.nextImage,15000)
     },
     
   data(){
     return{
            
-        images:[require("../assets/bg1.jpg"), require("../assets/bg6.jpg"), require("../assets/bg3.jpg"), require("../assets/bg7.jpg") ],
+        images:[require
+        // ("../assets/bg1.jpg"), 
+        // require("../assets/bg6.jpg"), 
+        // require("../assets/bg3.jpg"), 
+        ("../assets/bg7.jpg") 
+        ],
         currentNumber:0,
         filter:{
                     selectedLocation:'',
                     selectedHairstyle:'',
                     datePicked: new Date().toISOString().slice(0,10),
         },
-
-
-                    locations:[
+        locations:[
             {id:0, town:'Kericho'},
             {id:1, town:'Nairobi'},
             {id:2,town:'Nakuru'},
             {id:3,town:'Mombasa'}
             
         ],
-        
-            hairstyles:[
+        hairstyles:[
             {id:0,style:'Dyeing'},
             {id:1,style:'Braids'}, 
             {id:2,style:'Weaving'},
             {id:3,style:'Dreads'} 
         ],
-        
-
-        
         submitted:false,
     }
     },  
@@ -149,29 +119,20 @@ export default {
 
 
     methods:{ 
-
         goBack(){
             console.log(this.currentImage)
             this.prevImage()
-
         },
-
-        
         goNext () {
             console.log(this.currentImage)
-            
-            
                 this.nextImage() 
-
         },
         
         nextImage: function (){
              this.currentNumber += 1 // the next function increments the currentNumber
              if(this.isLastImage){
                  this.currentNumber = 0
-                 
              }
-
         },
         prevImage: function() {
 
@@ -179,55 +140,29 @@ export default {
             if(this.isFirstNumber){
                 this.currentNumber = 1
             }
- 
         },
         submitButton(){
-            // console.log(this.datePicked)
-            // console.log(this.)
-            // console.log(this.datePicked)
-            if(this.filter.selectedLocation && this.filter.selectedHairstyle && this.filter.datePicked){
-                
-
+            if(this.filter.selectedLocation && this.filter.selectedHairstyle && 
+            this.filter.datePicked){
                  this.$router.push({path: 'booking'})
-                //  this.$http.post('',this.filter)
-                // .then(function(data){
-                //      console.log(this.filter)
-                //      // save filter id in store
-                //      this.submitted = true; 
-
-                //      });
 
             }else{
-                
-                    alert('please fill all the fields')
+                alert('please fill all the fields')
                 }
-
-                // !this.location ? this.errors.location ='' :this.errors.location ='Please select your location'
-                // !this.hairstyle ? this.errors.hairstyle = '' :this.errors.hairstyle = 'Please select at least one hairstyle'
-                // !this.date ? this.errors.date = '' :this.errors.date = 'You have not chosen a date'
-            
-            } 
-      
-
+                // date ? this.errors.date = '' :this.errors.date = 'You have not chosen a date'
+            }
         }
-        
-            
-        
-        
 }
   
 </script>
-
 <style scoped lang="css">
-
-
 .filter-page{
    background: auto;
    background: no-repeat center center fixed;
    position:inherit;
    margin-left:500px;
    margin-left:900px;
-   height:100vh;
+   height:90vh;
    font-family:Arial, Helvetica, sans-serif;
    margin: 0;
    padding:none;
@@ -254,7 +189,6 @@ h1{
       justify-content:center;
       align-items: center;
       padding:200px;
-      
       padding-top:400px;
       flex-wrap: wrap; 
       position: fixed;   

@@ -1,14 +1,24 @@
 <template>
     <div id="stylist-profile">
         <div class="flex-container">
-        <h2> My profile </h2>
+            <div class="top-text">
+                <h2> Create your hairstylist profile </h2>
+                <div><br>Customers can view your information 
+                <br>and easily connect with you</div>
+            </div>
+       
         <keep-alive>
+            
             <form  enctype="multipart/form-data" v-if="!profile.submitted">
-           <label>Upload Image {{profile.file}} </label>
-            <div class="imageUpload">     
+            <div class="container">
+            <div class="imageUpload">
+                <div class="myServices">
+                <label><h2>Upload Image {{profile.file}}</h2> </label>
+                </div>
                 <div class="image-preview" >
-                    <img :src="profile.imagePreview" v-show="profile.showPreview" height="220" width="220">
-                 </div>
+                    <img :src="profile.imagePreview" v-show="profile.showPreview" 
+                    height="300" width="300">
+                 
                 <input type="file" name="image" @change="onFileSelected" accept="image/*" 
                 id="file"
                  ref="file" >
@@ -16,24 +26,39 @@
                 <!-- <p>
                 Drag your file(s) here to begin<br> or click to browse
                 </p> -->
+                </div>
                 <button @click="onUpload" >Upload</button>
             </div>
-            <label>Name:</label>
-            <!--lazy is an input modify-->
-            <input type ="text"  v-model.lazy="profile.name" required/>
-            <rating/>
-            
-            <label>Workplace</label>
-            <textarea v-model.lazy="profile.workplace"></textarea>
 
-            <label>Description</label>
+            
+                <div class="imageUpload">
+                    <div class="myServices">
+                        <h2>Fill required information:</h2>
+                    </div>
+                    <div class="stylist-infor1">
+                        <!--lazy is an input modify-->
+                        <input placeholder ="Name" type ="text"  v-model.lazy="profile.name" required/>
+                    </div>
+                    <div class="stylist-infor1">
+                        <input placeholder="Contacts: 0712345678" v-model.lazy="profile.contacts">
+                    </div>
+                    <div class="stylist-infor1">
+                        <input placeholder="workplace" v-model.lazy="profile.workplace">
+                    </div>
+                </div>
+                </div>
+
+                <div class="container">
+            <div class="desc">
+                <div class="myServices">
+                    <h2>Description</h2>
+                </div>
             <textarea v-model.lazy="profile.description"></textarea>
- 
-            <div id="checkboxes">
+            </div>
+            <div class="desc">
                 <div class="myServices">
                     <h2>My services:</h2>
                 </div>
-                
                 <input type="checkbox" value="Braiding" v-model="profile.services"/>
                 <label>Braiding</label><br>
                 <input type="checkbox" value="Dreads" v-model="profile.services"/>
@@ -44,64 +69,35 @@
                 <label>Cornrows</label> <br>
                 <input type="checkbox" value="Weaving" v-model="profile.services"/>
                 <label>Weaving</label>
-            </div>
+                </div>
 
-            <!-- <label>Services</label>
-            <select v-model="blog.genre">
-           <option v-for="service in services">{{service}}</option>
-           </select> -->
+                <div class="desc" id="desc-check">
+                <input type="checkbox" value="Braiding" v-model="profile.services"/>
+                <label>Wigs</label><br>
+                <input type="checkbox" value="Dreads" v-model="profile.services"/>
+                <label>Dyeing</label><br>
+                <input type="checkbox" value="Pedicure and Manicure" v-model="profile.services"/>
+                <label>Make-up</label><br>
+                <input type="checkbox" value="Cornrows" v-model="profile.services"/>
+                <label>Bantu knots</label><br>
+                <input type="checkbox" value="Cornrows" v-model="profile.services"/>
+                <label>Natural hair</label> <br>
+                <input type="checkbox" value="Weaving" v-model="profile.services"/>
+                <label>Shaving and trimming</label>
            <br>
-           <div id="postBlog" >
+           <div class="postBlog" >
            <button @click.prevent="postProfile" 
            :disabled="!this.profile"
            > Update Profile </button>
            </div>
+            </div>
+             </div>
         </form>
 
         </keep-alive>
 
     </div>
-    <div class="timeCalender">
-     <div class="datePicker"> 
-         <h2>Choose the date to set your Timetable</h2>
-         <strong><i class='far fa-calendar-alt' aria-hidden="true"></i></strong> 
-         <span id="calenderInput">
-             <input placeholder="Date:"  id="datepicker" v-model="datePicked" type="date" class="far fa-calendar-alt" >
-         </span>
-    </div>
-                <div class="time-table">
-                    <h2>The Timetable</h2>
-                <div class="time-grids">
-                    <div>Time</div>
-                    <div>6AM.-8AM.</div>
-                    <div>8AM. -10AM.</div>  
-                    <div>10AM. - NOON</div>
-                    <div>N00N - 2PM.</div>
-                    <div>2PM. - 4PM.</div>  
-                    <div>4PM. - 6PM.</div>
-                    <div>6PM. - 8PM.</div>
-                    <div>8PM - 10PM.</div>  
-                    <div>10PM.- MIDNIGHT</div>
-                    <div>MIDNIGHT - 2AM.</div>
-                    <div>2AM. - 4AM.</div>
-                    <div>4AM. - 6AM.</div>
-                </div>
-                
-                <div class="first-hour">
-                    <div>First Hour</div>
-                    <div ref="firstHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor(index)" v-for="(text,index) in firstHourTexts" :key="index">
-                        {{ text }}         
-                    </div>      
-                </div>
-                
-                <div class="second-hour">
-                <div>Second hour</div>
-                    <div ref="secondHourTexts" :class="{'selected': text==='booked'}"  @click="changeColor1(index)" v-for="(text,index) in secondHourTexts" :key="index" selected>
-                        {{ text }}
-                    </div>
-                </div>
-        </div>
-        </div> 
+    
     </div>
 
 </template>
@@ -127,13 +123,15 @@ export default {
             registered:false,
             profile:{             
                 file:'',        
-                name:" ",     
-                workplace:" ",     
-                description:" ",   
-                services:[],
+                name:"",     
+                workplace:"",     
+                description:"",   
+                services:['Cornrows','Weaving'],
                 showPreview: false,
-                imagePreview: '../assets',
+                imagePreview: '../assets/profile2.jpg',
+                // imagePreview: '../assets',
                 submitted:false,
+                user_id:0
             },
             datePicked: new Date().toISOString().slice(0,10),
             firstHourTexts:[
@@ -167,18 +165,56 @@ export default {
             profiles:[]
         }
     },
+   created(){
+       
+
+       console.log(this.$route.params.id)
+            this.$http.get('http://localhost:3000/stylistprofile/' + this.$route.params.id)
+            .then(function(data){
+            return data.json();
+            console.log(data)
+            })
+            .then(response => {
+                // let userId= this.$route.params.id
+                // localStorage.setItem('stylist_profile',JSON.stringify(response.data.stylist_profile))
+                // localStorage.setItem('jwt',response.data.token)
+            if (localStorage.getItem('jwt') != null){
+             var userId = this.$route.params.id;
+                // this.$router.push(`/stylistProfilePreview/${userId}`) 
+            }
+                // let profileObject = {
+                // image: response.data.stylist_profile.image,
+                // name: response.data.stylist_profile.name,
+                // workplace: response.data.stylist_profile.workplace,
+                // description: response.data.stylist_profile.description,
+                // services: response.data.stylist_profile.services.split(','),
+                // submitted: response.data.stylist_profile.submitted,
+                // user_id: response.data.stylist_profile.user_id
+                // }
+                this.$router.push(`/stylistProfilePreview/${userId}`) 
+                    console.log(profileObject.name)
+            })   
+            .catch(error =>{
+                if(error.status = 401){
+                //    let userId = this.$route.params.id;
+                //     this.$router.push(`/stylistprofile/${userId}`)
+                console.log('hiii')
+                }
+                if(error.status = 500){
+                    console.log(error)
+                }
+            })
+},
+   
+   
    
     //fake jason server to store user inputs
     methods:{
         // ...mapActions(['addStylistProfile']),
         // ...mapActions(['fetchStylistProfile']),
        postProfile(){
-
-    //   this.$v.form.$touch()
-    //   if(!this.$v.form.$invalid && !this.$v.form.$error)
-        
         console.log(this.profile)
-        // this.profile.submitted = true
+        this.profile.submitted = true
         console.log(this.profile.submitted)
         let profileData = {
             image: this.profile.imagePreview,
@@ -186,26 +222,29 @@ export default {
             workplace: this.profile.workplace,
             description: this.profile.description,
             services: this.profile.services.join(','),     
-            submitted: this.profile.submitted    
+            submitted: this.profile.submitted,
+            user_id: this.$route.params.id  
         }
         
         // let userId = response.body.stylist_profile.id;
         this.$http.post('http://localhost:3000/stylistprofile', profileData  
+        
         )    
         .then(response => {
             localStorage.setItem('stylist_profile',JSON.stringify(response.data.stylist_profile))
             localStorage.setItem('jwt',response.data.token)
 
-            if (localStorage.getItem('jwt') != null){//if user has an account already
-                Swal.fire('title...', 'You already have an account!', 'warning')
-                // if(localStorage.getItem('jwt') = null){//I need explanation!!!
-                // }   
-            }else{
-                    return this.profile.submitted = false
-                }
+            if (this.profile.submitted = true){//if user has an account already
+                // Swal.fire('title...', 'You already have an account!', 'warning')
+                this.$router.push({path:'/stylistProfilePreview/' + this.$route.params.id})  
+                return this.profile.submitted = true
+            }
         })
         .catch(error => {
-          console.error(error);  
+            if(error.status == 500) {
+                console.error(error);
+            }
+            
         //   Swal.fire('title...', 'You already have an account!', 'warning')
         });
         // if(this.profile.submitted = true){
@@ -333,196 +372,92 @@ export default {
 #stylist-profile{
     /* margin:20px auto; */
     padding-left:20px;
-    background-image: url("../assets/bg2.jpg");
-    background-repeat:  no-repeat;
-    background-position:   fixed;
+    /* background-image: url("../assets/bg2.jpg"); */
+    background-color: rgb(12, 12, 12);
+    background-image: radial-gradient(circle,black, rgb(43, 40, 40), black);
+    /* background-repeat:  no-repeat;
+    background-position:   fixed; */
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    color:black;
-    
-}
-
-  .input-file {
-    opacity: 0; /* invisible but it's there! */
-    width: 100%;
-    height: 200px;
-    position: absolute;
-    cursor: pointer;
-  }
-
-
-.myServices{
-    padding-left:20px;
-    margin-right: 400px;
-    font-size:20px;
-    
-}
-.flex-container{
-    margin-right:500px;
-}
-.selected{
-    background-color: green !important ; 
     color:white;
-    cursor: pointer;
 }
-.stylist-page{
-    background-image: url("../assets/bg7.jpg");
-    background-repeat:  no-repeat;
-    background-position:   fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    /* margin: auto; */
-    height:100vh;
-}
-.timeCalender{
-   position:absolute;
-   top:0;
-   right:0;
-   margin-left:900px;
-   padding-top:70px;
-   
-   padding-left: 5px;
-   height:500px;
-   margin-top:50px;
-
-
-}
-.datePicker{
-    padding:20px;
-    margin-top:10px;
-    padding-left: 200px;
-}
-.time-table{
-    width:690px;
-    background-color:yellow;
-    font-size:12px;
-    margin-top:20px;
-    margin-left:5px;
-    font-weight:700; 
-    margin-right:20px;
-}
-/* table, th, td {
-  border: 1px solid black;
-} */
-.time-grids{
-  display: flex;
-  flex-wrap: wrap;
-  background-color: DodgerBlue;
-
-}
-.time-grids > div {
-  background-color: #f1f1f1;
-  width: 51px;
-  margin: 1px;
-  text-align: center;
-  /* line-height: 20px; */
-  font-size: 10px;
-}
-.first-hour{
-  display: flex;
-  flex-wrap: wrap;
-  background-color: DodgerBlue;
-  height:40px;
- 
-
-}
-.first-hour > div {
-  background-color: #f1f1f1;
-  opacity:0.8;
-  width: 51px;
-  margin: 1px;
-  /* text-align: center; */
-  /* line-height: 20px; */
-  font-size: 10px;
-  height:35px;
-  cursor: pointer;
-}
-.second-hour{
-  display: flex;
-  flex-wrap: wrap;
-  background-color: DodgerBlue;
-  
-
-}
-.second-hour > div {
-  background-color: #f1f1f1;
-  opacity: 0.8;
-  width: 51px;
-  margin: 1px;
-  text-align: center;
-  font-size: 10px;
-  cursor: pointer;
-}
-input[type="text"], textarea{
-    display:block;
-    width:50%;
-    padding:8px;
-    border: 2px solid purple;
-    border-radius: 4px;
-    background-color: transparent;
-    
-} 
-label{
-    display:block;
-    margin:20px 0 10px;
-}
-
-#previewBlog{
-    border:2px purple #ccc;
-    border: 5px solid;
-    border-radius:3px;
-    padding: 10px;
-    margin:30px 0;
-    color:black;
-    font-size: 20px;
-    min-width: 300px;
-    max-width: 400px;
+.top-text{
+    width:100%;
+    padding:30px;
+    text-align: center;
     margin-top:50px;
-    height:500px;
+}
+.container{
+    display:inline-flex;
+    margin:10px;
+}
+.myServices{
+    background-color: black;
+    width:100%;
+}
+.imageUpload{
     
-}
-h3{
-    margin-top:5px;
+    background-color: rgb(211, 198, 13);
     padding:10px;
+    margin: 5px;
+    width:50%;
 }
-h4{
+.imageUpload input{
+    width:100%;
+    height:45px;
+    border:black solid 2px;
+    border-radius: 10px;
+    background-color: aliceblue;
+}
+.desc{
+    /* background-color:purple; */
     padding:10px;
+    margin: 5px;
+    width:33%;  
+    font-size:15px; 
 }
-#checkboxes input{
-    margin-right:10px;
-    display:inline-block;
-   
+.desc textarea{
+    width:370px;
+    height:200px;
+    background-color: white;
+    border:rgb(42, 1, 46) solid 4px;
+    border-radius: 4px;
 }
-#checkboxes label{
-    display:inline-block;
-    font-size:20px;
-}
-#postBlog{
-  padding-left:150px;
-  padding:20px;
+.desc input{
+    margin:15px;
 
-
+}
+#desc-check{
+    padding-top: 50px;
+}
+.stylist-infor1{
+    padding:20px;
+    margin:10px;
+    font-size: 15px;
+}
+.image-preview{
+    /* background-color: blue; */
+    /* margin-left:30px; */
+    height:300px;
+    width:300px;
+}
+.stylist-infor{
+    background-color: brown;
+}
+.postBlog{
+    /* background-color: rgb(160, 177, 11); */
+    margin-left:300px;
+    padding:3px;
+    margin-top:30px;
 }
 button{
-    margin:2px;
-    color:black;
-    background: grey;
-    outline:none;
-    display:block;
-    border-radius:3px;
-    cursor: pointer;
-    
+    background-color: rgb(35, 1, 54);
+    border-radius:20px;
+    width:150px;
+    height:30px;
 }
-button:hover{
-    cursor:pointer;
-}
-#thanksMessage{
-    color:Purple;
 
-}
 </style>
 

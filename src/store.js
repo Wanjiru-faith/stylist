@@ -14,10 +14,10 @@ export default new Vuex.Store({
     stylists:[],
     specificStylist:[],
     stylistprofile:[],
-    customerSignIn:[], 
+    customerSignUp:[], 
     customerLogin:[],
     filterDetails:[],
-    stylistSignIn:[],
+    stylistSignUp:[],
     stylistLogin:[],
   },
 

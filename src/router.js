@@ -1,40 +1,39 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/Login.vue'
-import signIn from './views/signIn.vue'
+import signup from './views/signup.vue'
 import Salon from './views/Salon.vue'
 import Booking from './views/Booking.vue'
 import Pay from './views/Pay.vue'
 import Filter from './views/Filter.vue'
 import Stylistprofile from './views/stylistProfile.vue'
-import stylist from './views/stylist.vue'
 import HelloWorld from './components/HelloWorld.vue'
 import stylistProfilePreview from './views/stylistProfilePreview.vue'
-
-
+import Home from './views/Home.vue'
 Vue.use(Router)
 
-var router =  new Router({
+var router =  new Router({ 
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    {path: '/', name: 'filter', component: Filter,
+    {path: '/filter/:id', name: 'filter', component: Filter,
     meta: { 
       //only authenticated users should see it
-      requiresAuth: true,
-      guest:false,
-      is_stylist:false}},      
+      requiresAuth: true
+    }},      
     {path: '/about',
-      name: 'about',
+      name: 'about', 
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
-    {path: '/sign-in', name:'sign-in', component:signIn,
+    {path: '/sign-up', name:'signup', component:signup,
     meta: {hideNavigation: true,
-      // guest: true
+          //  guest: true
     }},
+    {path: '/Home', name:'home', component:Home,
+    meta: {hideNavigation: true}},
     {path: '/salon', name:'Salon', component:Salon},
     {path: '/booking', name:'Booking', component:Booking,
     //meta: { requiresAuth: true}
@@ -45,12 +44,11 @@ var router =  new Router({
       //only non authenticated users should see it
       // guest: true
     }},
-    {path: '/stylistprofile/:id', name:'Stylistprofile', component:Stylistprofile,
+    {path: '/stylistprofile/:id', name:'stylistprofile', component:Stylistprofile,
     meta: { 
       //only stylist users should see it
       requiresAuth: true,
-      is_stylist : true,
-      guest:false
+      is_stylist : true
   }
 },
     // {path:'/stylist/:id', component:stylist},
@@ -58,15 +56,10 @@ var router =  new Router({
     meta: { 
       //only stylist users should see it
       requiresAuth: true,
-      is_stylist : true,
-      guest:false
+      is_stylist : true
   }
   },
-    {path:'/HelloWorld', component:HelloWorld, name:'HelloWorld',
-  meta:{
-      guest:true
-  }}
-    
+    {path:'/', component:HelloWorld, name:'HelloWorld'}
     
   ]   
 })
@@ -82,14 +75,15 @@ router.beforeEach((to, from, next) => {
               params: { nextUrl: to.fullPath }
           })
       } else {
-          let user = localStorage.getItem('user')  ? JSON.parse(localStorage.getItem('user')) : [];
+          // let user = localStorage.getItem('user')  ? JSON.parse(localStorage.getItem('user')) : [];
+          let user = JSON.parse(localStorage.getItem('user'))
           if(to.matched.some(record => record.meta.is_stylist )) {
               if(user.is_stylist == 1){
                   next()
               }
               else{
                   next({name: 'filter'})
-              }
+              }   
           }else {
               next()
           }

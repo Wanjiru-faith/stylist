@@ -2,18 +2,12 @@
         <v-toolbar app  dark class="toolbar">
             <v-toolbar-side-icon></v-toolbar-side-icon>
             <v-toolbar-title></v-toolbar-title>
-            <v-btn flat>Menu</v-btn>
-            <!-- -->
-            <div class ="sba">
-                <i class="link">Services</i> 
-                <i class="link">Blog</i>
-                <i class="link">About Us</i>
-            </div>
-            
-            
+            <v-btn flat></v-btn>
             <v-spacer></v-spacer>
+            <div class="buttons">
             <v-btn flat @click="login">LOGIN</v-btn>
-            <v-btn flat @click="signIn">SIGN IN</v-btn>
+            <v-btn flat @click="signUp">SIGN UP</v-btn>
+            </div>
         </v-toolbar>
 </template>
 
@@ -24,8 +18,8 @@ export default {
         login(){
             this.$router.push({path: 'login'})
         },
-        signIn(){
-            this.$router.push({path: 'sign-in'})
+        signUp(){
+            this.$router.push({path: 'sign-up'})
         } 
 
     }
@@ -36,10 +30,15 @@ export default {
 .toolbar{
     background-color:black;
     color:white;
-    height:70px;
+    height:85px;
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     width: 100%;
+}
+.v-btn{
+    padding-top: 20px;
+    font-size:20px;
+    color: aqua;
 }
 .sba{
     padding-left:200px;
@@ -47,4 +46,5 @@ export default {
 .link{
     padding:50px;
 }
+
 </style>

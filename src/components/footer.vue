@@ -1,38 +1,22 @@
 <template>
 <footer>
-<p> {{copyright}} {{title}}</p>
+<p> {{copyright}}</p>
 </footer>
-  
-</template>
+</template>   
 
 <script>
-
-
 export default {
-    props:{
-        title:{
-            type:String
-        }
-    },
-  
-  data(){
+  data(){ 
     return{
-        copyright:'Copyright 2017 Melanini254'
-     
+        copyright:'Copyright Wine Shop 2020'
     }
   },
-
-
 }
-
 </script>
 
 <style>
 footer{
 background:white;
-padding:6px;
-position:inherit;
-height: 90px;
 }
 p{
     color:black;

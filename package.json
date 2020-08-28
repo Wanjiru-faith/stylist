@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -27,10 +28,12 @@
     "vee-validate": "^2.2.12",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
+    "vue-gallery-slideshow": "^1.5.0",
     "vue-material": "^1.0.0-beta-11",
     "vue-multiselect": "^2.1.6",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.3",
+    "vue-runtime-helpers": "^1.1.2",
     "vue-select": "^3.1.0",
     "vuejs-datepicker": "^1.6.2",
     "vuelidate": "^0.7.4",

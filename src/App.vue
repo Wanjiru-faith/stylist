@@ -21,9 +21,9 @@ export default {
     // 'app-filter':filter,
     'app-footer':footer,
     'app-header':header,
-    
+       
   },
-
+    
   data(){ 
     return{ 
 
